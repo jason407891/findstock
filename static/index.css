@@ -1,0 +1,276 @@
+.body{
+    margin:0px;
+}
+.account{
+    width:100%;
+    height:20px;
+    display:flex;
+    justify-content: flex-end;
+}
+.index_title{
+    margin-left: 10px;
+    display:flex;
+    font: 30px "Noto Sans TC";
+    font-weight: 700;
+    color: orangered;
+}
+.account-content{
+    margin-left: 10px;
+    margin-right: 10px;
+}
+.search_area{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 46px;
+}
+.search{
+    display:flex;
+    width:100%;
+    height: 100%;
+    justify-content: center;
+}
+.photo{
+    height:80px;
+    width: 80px;
+}
+.search-bar{
+    width:500px;
+    height: 100%;
+    padding:0px;
+}
+.search_btn{
+    width: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.search-icon{
+    height: 30px;
+    width: 30px;
+}
+.search_many{
+    display: flex;
+    text-align: center;
+    align-items: center;
+}
+.select{
+    display:flex;
+    width:100%;
+    justify-content: center;
+}
+.banner-block{
+    display:flex;
+    width:100%;
+    height: 550px;
+    justify-content: center;
+    align-items: center;
+    margin-top:10px;
+    margin-bottom: 10px;
+}
+.changebtn{
+    display:flex;
+    align-items: center;
+    justify-content: center;
+    position:absolute;
+    width: 800px;
+    height: 36px;
+}
+.pic_left_btn{
+    z-index:20;
+    position: absolute;
+    left: 10px;
+}
+.pic_right_btn{
+    z-index:20;
+    position: absolute;
+    left: 754px;
+}
+.banner-container{
+    display: flex;
+    position: absolute;
+    overflow: hidden;
+    width: 800px;
+    top:250px;
+}
+
+.advantage-text{
+    display:flex;
+    justify-content: center;
+    font-size:16px;
+    margin-top:10px;
+    margin-bottom: 10px;
+}
+.advantage{
+    width:100%;
+    display:flex;
+    justify-content: center;
+    margin-top:10px;
+    margin-bottom: 10px;
+}
+.select-btn{
+margin-left: 20px;
+margin-right: 20px;
+font-size:16px;
+}
+.banner-img{
+    min-width: 100% !important;
+    height: 500px;
+    object-fit:cover;
+    object-position: center;
+}
+.product-img{
+    width:30px;
+    height: 30px;
+}
+.brand-list{
+    width: 150px;
+    height: 150px;
+}
+.footer{
+    background-color: #353535;
+    height: 300px;
+    color: white;
+    font-size: large;
+}
+.signup_block{
+    display:flex;
+    width:100%;
+    justify-content: center;
+    position: absolute;
+    top:80px;
+    display: none;
+}
+.signup{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+    position: absolute;
+    background-color: white;
+    height: auto;
+}
+.close_button{
+    position:absolute;
+    width:30px;
+    height: 30px;
+    left:300px;
+    top:10px;
+}
+.searchmany_close{
+    position:absolute;
+    width:30px;
+    height: 30px;
+    left:470px;
+    top:-5px;
+
+}
+.signup_text{
+    text-align: center;
+    width:310px;
+    height: 27px;
+    margin-top: 7px;
+    font: 24px "Noto Sans TC";
+    color: #666666;
+    font-weight: 700;
+}
+.register_input{
+    width:310px;
+    height: 47px;
+    border-radius: 5px;
+    border: 1px solid #CCCCCC;
+    margin-top:10px;
+}
+.submit_btn{
+    width:310px;
+    height: 47px;
+    margin-top:10px;
+    font: 19px "Noto Sans TC";
+    border-radius: 5px;
+    border: none;
+    background-color: orange;
+    color:white;
+    text-align: center;
+}
+.login_link{
+    width:310px;
+    height:22px;
+    text-align: center;
+    margin-top:10px;
+    margin-bottom:20px;
+    font: 16px "Noto Sans TC";
+    font-weight: 500;
+    color: #666666;
+}
+.login_block{
+    width:100%;
+    display:flex;
+    justify-content: center;
+    position:absolute;
+    top:80px;
+     /* 先把登入表單隱藏起來 */
+    display:none;
+}
+.login{
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width:340px;
+    height: 275px;
+    position:absolute;
+    background-color: white;
+    z-index:350;
+}
+.deco_bar{
+    width:340px;
+    height: 10px;
+    background-image:linear-gradient(to right,orange,#df6208);
+}
+.login_text{
+    text-align: center;
+    width:310px;
+    height: 27px;
+    margin-top: 7px;
+    font: 24px "Noto Sans TC";
+    color: #666666;
+    font-weight: 700;
+}
+.login_input{
+    width:310px;
+    height: 47px;
+    border-radius: 5px;
+    border: 1px solid #CCCCCC;
+    margin-top:10px;
+}
+.search_many_block{
+    display: flex;
+    justify-content: center;
+    width:100%;
+    position: absolute;
+    top:80px;
+}
+.searchmany_form{
+    display: flex;
+    width: 500px;
+    flex-direction: column;
+    position: absolute;
+    background-color: white;
+    display:none;
+}
+.mutiple_title{
+    background-color: bisque;
+}
+.inputmuti_area{
+    display: flex;
+    justify-content: center;
+}
+.mutiple_input{
+    height: 400px;
+    width:80%;
+}
+.do_mutiplesearch{
+    text-align: center;
+}

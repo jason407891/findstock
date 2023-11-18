@@ -1,0 +1,137 @@
+<!DOCTYPE html> <!--文件型態-->
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>電子零件商城</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='index.css') }}"/>
+    <meta charset="utf-8">
+</head>
+<body class="body">
+    <div class="account" id="logstatus">
+        <span class="account-content" onclick="sign_in()">登入</span>
+        <span class="account-content" onclick="register()">註冊</span>
+    </div>
+    <hr>
+    <div class="index_title">FINDSTOCK電子元件商城</div>
+    </br>
+    <div class="search_area">
+        <div class="search">
+            <input placeholder="請輸入產品編號" class="search-bar" onkeypress="handle_search(event)"></input>
+            <div class="search_btn" onclick="golist()">
+                <img src="../static/search.png" class="search-icon" onmouseover="style.opacity=0.7" onmouseout="style.opacity=1"></img>
+            </div>
+            <span class="search_many"onclick="searchmany_open()" onmouseover="style.opacity=0.7" onmouseout="style.opacity=1">批量搜尋</span>
+        </div>
+    </div>
+    </br>    
+    </br>
+    <div class="select">
+        <span class="select-btn" onclick="goindex()">首頁</span>
+        <span class="select-btn" onclick="gostock()">庫存上傳</span>
+        <span class="select-btn" onclick="gobom()">BOM表</span>
+        <span class="select-btn" onclick="gocontact()">聯繫我們</span>
+    </div>
+    <hr>
+    <div class="banner-block">
+        <div class="changebtn">
+            <img src="../static/left_arrow.png" class="pic_left_btn" onclick="scroll_left()">
+            <img src="../static/right_arrow.png" class="pic_right_btn" onclick="scroll_right()">
+        </div>
+        <div class="banner-container">
+            <img src="../static/wehelp.jpg" class="banner-img"></img>
+            <img src="../static/index1.png" class="banner-img"></img>
+            <img src="../static/index2.png" class="banner-img"></img>
+        </div>
+    </div>
+    <div class="advantage-text">優勢品牌</div>
+    <div class="advantage">
+        <img class="brand-list" src="../static/TELOGO.png"></img>
+        <img class="brand-list" src="../static/JSTLOGO.jpg"></img>
+        <img class="brand-list" src="../static/MOLEXLOGO.jpg"></img>
+    </div>
+    <div class="footer">
+        <div>聯絡我們</div>
+        <div>TEL: 02-26975001 #2027</div>
+        <div>EMAIL: jason.lin@pteamtech.com</div>
+        <div>LINE: rtyu73162</div>
+    </div>
+    <!--註冊帳號的表單-->
+    <div class="signup_block">
+        <form class="signup">
+            <div class="deco_bar"></div>
+            <div class="signup_text">註冊會員帳號</div>
+            <img src="../static/close.png" class="close_button" onclick="close_form()"></img>
+            <input class="register_input" name="name" placeholder="*輸入聯絡人姓名*"></input>
+            <input class="register_input" name="email" placeholder="*輸入電子郵件*"></input>
+            <input class="register_input" name="password" placeholder="*輸入密碼*" type="password"></input>
+            <input class="register_input" name="company_name" placeholder="*輸入公司名稱*"></input>
+            <input class="register_input" name="phone" placeholder="輸入電話&分機"></input>
+            <input class="register_input" name="tax_id" placeholder="輸入統編"></input>
+            <input class="register_input" name="address" placeholder="輸入收件地址"></input>
+            <input class="register_input" name="brand" placeholder="常用電子零件品牌/優勢品牌"></input>
+            <div>備註: 註冊後可於庫存頁面上傳庫存</div>
+
+            <input class="submit_btn" onclick="register_user()" value="註冊新帳戶"></input>
+            <div class="signup_link"><span id="have_account">已經有帳戶了？</span><span onclick="sign_in()">點此登入</span></div>
+        </form>
+    </div>
+
+    <!--登入會員的表單-->
+    <div class="login_block">
+        <div class="login">
+            <div class="deco_bar"></div>
+            <div class="login_text">登入會員帳號</div>
+            <img src="../static/close.png" class="close_button" onclick="close_form()"></img>
+            <input class="login_input" placeholder="輸入電子信箱"></input>
+            <input class="login_input" placeholder="輸入密碼" type="password"></input>
+            <input class="submit_btn" onclick="login()" value="登入帳戶"></input>
+            <div class="login_link">還沒有帳戶？<span onclick="register()">點此註冊</span></div>
+        </div>
+    </div>
+    <!--批量搜尋功能-->
+    <div class="search_many_block">
+        <div class="searchmany_form">
+            <div class="mutiple_title">批量搜尋</div>
+            <img src="../static/close.png" class="searchmany_close" onclick="searchmany_close()"></img>
+            <div class="inputmuti_area">
+                <textarea class="mutiple_input" placeholder="將產品型號和數量複製到此處，支援多行"></textarea>
+            </div>
+            <div>範例:<br>
+                55100-0670 100<br>
+                PAP-02V-S 200
+            </div><br>
+            <div class="do_mutiplesearch" onmouseover="style.opacity=0.7" onmouseout="style.opacity=1">開始搜尋</div>
+        </div>
+    </div>
+
+
+
+
+
+
+
+    <script src="{{url_for('static', filename='page.js') }}"></script>
+    <script src="{{url_for('static', filename='login.js') }}"></script>
+
+         
+    <script>
+        function scroll_right(){
+            let pic_display = document.querySelector(".banner-container");
+            let scrollamount = 800;
+            pic_display.scrollLeft += scrollamount;
+        }
+        function scroll_left(){
+            let pic_display = document.querySelector(".banner-container");
+            let scrollamount = 800;
+            pic_display.scrollLeft -= scrollamount;
+        }
+        function getsupplier(){
+            let company_name = localStorage.getItem("company_name");
+            return company_name
+        }
+
+
+
+    </script>
+</body>
+</html>

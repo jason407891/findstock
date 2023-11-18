@@ -1,0 +1,191 @@
+<!DOCTYPE html> <!--文件型態-->
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>電子零件商城</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='index.css') }}"/>
+    <meta charset="utf-8">
+</head>
+<body class="body">
+    <div class="account" id="logstatus">
+        <span class="account-content" onclick="sign_in()">登入</span>
+        <span class="account-content" onclick="register()">註冊</span>
+    </div>
+    <hr>
+    <div class="index_title">FINDSTOCK電子元件商城</div>
+    </br>
+    <div class="search_area">
+        <div class="search">
+            <input placeholder="請輸入產品編號" class="search-bar" onkeypress="handle_search(event)"></input>
+            <div class="search_btn" onclick="golist()">
+                <img src="../static/search.png" class="search-icon" onmouseover="style.opacity=0.7" onmouseout="style.opacity=1"></img>
+            </div>
+            <span class="search_many"onclick="searchmany_open()" onmouseover="style.opacity=0.7" onmouseout="style.opacity=1">批量搜尋</span>
+        </div>
+    </div>
+    </br>    
+    </br>
+    <div class="select">
+        <span class="select-btn" onclick="goindex()">首頁</span>
+        <span class="select-btn" onclick="gostock()">庫存上傳</span>
+        <span class="select-btn" onclick="gobom()">BOM表</span>
+        <span class="select-btn" onclick="gocontact()">聯繫我們</span>
+    </div>
+    <hr>
+    <div>新增庫存</div><br>
+    <div>
+        <input class="insertone_pn" placeholder="輸入產品編號"></input></br></br>
+        <input class="insertone_qty" placeholder="輸入庫存數量"></input></br></br>
+        <input class="insertone_mfr" placeholder="輸入製造商"></input></br></br>
+
+        <button onclick="insert_one()">新增</button></br>
+    </div>
+    <hr>
+
+    <div>批量新增庫存</div><br>
+    <a href="{{ url_for('static', filename='upload_template.xlsx') }}" download="upload_template1.xlsx">下載模板</a>
+    <br>
+    <br>
+    <div>
+        <input type="file" class="insertmany_file" id="input"></br></br>
+        <button onclick="insert_many()">上傳</button></br>
+    </div>
+    <hr>
+    <div>刪除庫存</div><br>
+    <span>請選擇上傳日期</span><input type="date"></input><br></br>
+    <span>輸入產品編號</span><input placeholder="輸入產品編號"></input><br></br>
+    <button>刪除</button></br>
+    <hr>
+    <div>庫存列表</div><br>
+    <button onclick="showstock()">顯示</button>
+    <div class="stock_display">
+    <table border="1">
+        <thead>
+            <tr>
+                <th>供應商</th>
+                <th>上傳時間</th>
+                <th>產品編號</th>
+                <th>庫存數量</th>
+                <th>製造商</th>
+            </tr>    
+          </thead>
+          <tbody class="tbody">
+            <tr>
+              <td>行1</td>
+              <td>行1</td>
+              <td>行1</td>
+              <td>行1</td>
+              <td>行1</td>
+            </tr>
+            <tr>
+              <td>行2</td>
+              <td>行2</td>
+              <td>行2</td>
+              <td>行2</td>
+              <td>行2</td>
+            </tr>
+
+    </table>
+    </div>
+    <hr>
+    <script src="{{url_for('static', filename='page.js') }}"></script>
+    <script src="{{url_for('static', filename='login.js') }}"></script>
+
+
+    <script>
+        function insert_one(){
+            let pn = document.querySelector(".insertone_pn").value;
+            let qty = document.querySelector(".insertone_qty").value;
+            let mfr = document.querySelector(".insertone_mfr").value;
+            fetch("/api/product/"+pn,{
+                method: "POST",
+                headers:{
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                "qty":  qty,
+                "mfr": mfr,
+                "supplier": getsupplier()
+            })
+            })
+            .then(response=>response.json())
+        .then(data=>{
+            console.log(data.id);
+            alert("新增成功");
+            console.log("success");
+        })
+        .catch(error=>{
+            console.log("something error")
+        });
+        };
+
+
+        function insert_many(){
+            let file=document.querySelector(".insertmany_file").files[0];
+            if(file){
+                let formdata = new FormData();
+                formdata.append("file",file);
+                formdata.append("supplier",getsupplier());
+                fetch("/api/products",{
+                    method: "POST",
+                    body: formdata
+                })
+                .then(response=>response.json())
+                .then(data=>{
+                    console.log(data.message);
+                })
+                .catch(error=>{
+                    console.log("上傳失敗");
+                })
+            }
+            else{
+                alert("請選擇文件")
+            }
+
+        }
+
+
+        function showstock(){
+            fetch("/api/showstock",{
+                    method: "POST",
+                    headers:{
+                    'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                    "supplier": getsupplier()
+                    })
+                })
+            .then(response=>response.json())
+            .then(data=>{
+                console.log(data.data);
+                let table=document.querySelector(".tbody");
+                table.innerHTML="";
+                data.data.forEach(item => {
+                    let row = document.createElement("tr");
+                    let supplierCell = document.createElement("td");
+                    let uploadTimeCell = document.createElement("td");
+                    let partNumberCell = document.createElement("td");
+                    let stockQtyCell = document.createElement("td");
+                    let manufacturerCell = document.createElement("td");
+
+                    supplierCell.textContent = item.supplier;
+                    uploadTimeCell.textContent = item.date;
+                    partNumberCell.textContent = item.pn;
+                    stockQtyCell.textContent = item.qty;
+                    manufacturerCell.textContent = item.mfr;
+
+                    row.appendChild(supplierCell);
+                    row.appendChild(uploadTimeCell);
+                    row.appendChild(partNumberCell);
+                    row.appendChild(stockQtyCell);
+                    row.appendChild(manufacturerCell);
+                    table.appendChild(row);
+                });
+            })
+            .catch(error=>{
+                console.log("something error")
+            });
+            };
+    </script>
+</body>
+</html>

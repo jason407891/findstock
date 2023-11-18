@@ -1,0 +1,40 @@
+<!DOCTYPE html> <!--文件型態-->
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>電子零件商城</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='index.css') }}"/>
+    <meta charset="utf-8">
+</head>
+
+<body class="body">
+    <div class="account" id="logstatus">
+        <span class="account-content" onclick="sign_in()">登入</span>
+        <span class="account-content" onclick="register()">註冊</span>
+    </div>
+    <hr>
+    <div class="index_title">FINDSTOCK電子元件商城</div>
+    </br>
+    <div class="search_area">
+        <div class="search">
+            <input placeholder="請輸入產品編號" class="search-bar" onkeypress="handle_search(event)"></input>
+            <div class="search_btn" onclick="golist()">
+                <img src="../static/search.png" class="search-icon" onmouseover="style.opacity=0.7" onmouseout="style.opacity=1"></img>
+            </div>
+            <span class="search_many"onclick="searchmany_open()" onmouseover="style.opacity=0.7" onmouseout="style.opacity=1">批量搜尋</span>
+        </div>
+    </div>
+    </br>    
+    </br>
+    <div class="select">
+        <span class="select-btn" onclick="goindex()">首頁</span>
+        <span class="select-btn" onclick="gostock()">庫存上傳</span>
+        <span class="select-btn" onclick="gobom()">BOM表</span>
+        <span class="select-btn" onclick="gocontact()">聯繫我們</span>
+    </div>
+    <hr>
+    <script src="{{url_for('static', filename='page.js') }}"></script>
+    <script src="{{url_for('static', filename='login.js') }}"></script>
+
+</body>
+</html>
