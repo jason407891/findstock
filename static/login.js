@@ -148,9 +148,13 @@ function checkstatus(){
             //未登入時的標籤id是logstatus
             let display_status=document.querySelector("#logstatus");
             console.log("用戶未登入")
-            display_status.innerHTML="登入/註冊";
+            display_status.innerHTML=`
+            <div class="account" id="logstatus">
+            <span class="account-content" onclick="sign_in()">登入</span>
+            <span class="account-content" onclick="register()">註冊</span>
+            </div>`;
             display_status.id="logstatus";
-            display_status.onclick=sign_in;
+            display_status.class="account-content";
         }
         else{
             //已登入時的標籤id是logout
@@ -199,13 +203,4 @@ function schedule_page(){
 function getsupplier(){
     let company_name = localStorage.getItem("company_name");
     return company_name
-}
-
-
-
-window.onload=function(){
-    checkstatus();
-    setTimeout(function(){
-        console.log("already check user status");
-    }, 500);
 }

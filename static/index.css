@@ -13,6 +13,7 @@
     font: 30px "Noto Sans TC";
     font-weight: 700;
     color: orangered;
+    text-decoration: none;
 }
 .account-content{
     margin-left: 10px;
@@ -110,9 +111,9 @@
     margin-bottom: 10px;
 }
 .select-btn{
-margin-left: 20px;
-margin-right: 20px;
-font-size:16px;
+    margin-left: 20px;
+    margin-right: 20px;
+    font-size:20px;
 }
 .banner-img{
     min-width: 100% !important;
@@ -273,4 +274,220 @@ font-size:16px;
 }
 .do_mutiplesearch{
     text-align: center;
+}
+
+
+.table_area{
+    display:flex;
+    justify-content: center;
+}
+.output_table{
+    width: 90%;
+    table-layout: fixed;
+}
+
+/*設定第N列的欄位寬*/
+.output_table th:nth-child(1) { width: 10%; }
+.output_table th:nth-child(2) { width: 10%; }
+.output_table th:nth-child(3) { width: 10%; }
+.output_table th:nth-child(4) { width: 20%; }
+.output_table th:nth-child(5) { width: 10%; }
+.output_table th:nth-child(6) { width: 25%; }
+.output_table th:nth-child(7) { width: 25%; }
+
+
+.contactus{
+    height: 500px;
+}
+
+.partnerdata{
+    height: auto;
+}
+.insert_line{
+    display:flex;
+    justify-content: center;
+    align-items: center;
+}
+.insertone_pn{
+    width: 250px;
+    height: 50px;
+    margin: 20px;
+}
+.insertone_qty{
+    width: 250px;
+    height: 50px;
+    margin: 20px;
+}
+.insertone_mfr{
+    width: 250px;
+    height: 50px;
+    margin: 20px;
+}
+.insert_btn{
+    margin: 20px;
+    display:flex;
+    width:80px;
+    height: 50px;
+    border: 1px solid orange;
+    background-color: orange;
+    border-radius: 5px;
+    justify-content: center;
+    align-items: center;
+    color:white;
+    font-size: 16px;
+}
+.insert_title{
+    font-size: 20px;
+    margin-left: 10px;
+}
+.select_file{
+    width: 250px;
+    height: 50px;
+    margin: 20px;
+}
+
+.insertmany_file{
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    width: 250px;
+    height: 50px;
+    margin: 20px;
+}
+.delete_date{
+    width: 250px;
+    height: 50px;
+    margin: 20px;
+}
+.delete_pn{
+    width: 250px;
+    height: 50px;
+    margin: 20px;
+}
+.delete_btn{
+    margin: 20px;
+    display:flex;
+    width:80px;
+    height: 50px;
+    border: 1px solid orange;
+    background-color: orange;
+    border-radius: 5px;
+    justify-content: center;
+    align-items: center;
+    color:white;
+    font-size: 16px;
+}
+.input_pn{
+    margin-left: 60px;
+}
+
+.stock_display{
+    display:flex;
+    justify-content: center;
+    align-items: center;
+}
+.celldata{
+    width:100px;
+    height: 50px;
+}
+.ptdata{
+    margin-bottom: 30px;
+}
+.partnerdata{
+    margin-bottom: 30px;
+}
+
+.productlist_title{
+    font-size: 20px;
+    margin-left: 10px;
+}
+.rfq_title{
+    font-size: 20px;
+    margin-left: 10px; 
+}
+.addpn{
+    width: 250px;
+    height: 50px;
+    margin: 20px;
+}
+.addmfr{
+    width: 250px;
+    height: 50px;
+    margin: 20px;
+}
+.addqty{
+    width: 250px;
+    height: 50px;
+    margin: 20px;
+}
+.send_rfq{
+    margin: 20px;
+    display:flex;
+    width:80px;
+    height: 50px;
+    border: 1px solid orange;
+    background-color: orange;
+    border-radius: 5px;
+    justify-content: center;
+    align-items: center;
+    color:white;
+    font-size: 16px;
+}
+
+.clear_rfq{
+    margin: 20px;
+    display:flex;
+    width:100px;
+    height: 50px;
+    border: 1px solid orange;
+    background-color: orange;
+    border-radius: 5px;
+    justify-content: center;
+    align-items: center;
+    color:white;
+    font-size: 16px;
+}
+.rfq_line{
+    display:flex;
+    justify-content: center;
+    align-items: center;
+}
+.order_area{
+    display:flex;
+    justify-content: center;
+    margin-bottom: 60px;
+}
+.contacttext{
+    display:flex;
+    flex-direction: column;
+    flex: auto;
+    width:100%;
+    height:200px
+}
+.contactcontent{
+    margin-top: 10px;
+    margin-left: 10px;
+    font-size: 20px;
+}
+.advice{
+    width:600px;
+    height: 50px;
+}
+.advice_line{
+    display:flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+.sendadvice{
+    background-color:orange;
+    width:80px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 20px;
+
 }

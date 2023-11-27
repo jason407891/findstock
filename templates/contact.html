@@ -6,35 +6,64 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='index.css') }}"/>
     <meta charset="utf-8">
 </head>
-
-<body class="body">
-    <div class="account" id="logstatus">
-        <span class="account-content" onclick="sign_in()">登入</span>
-        <span class="account-content" onclick="register()">註冊</span>
-    </div>
+    <body class="body">
+    <div class="bodylist"></div>
     <hr>
-    <div class="index_title">FINDSTOCK電子元件商城</div>
-    </br>
-    <div class="search_area">
-        <div class="search">
-            <input placeholder="請輸入產品編號" class="search-bar" onkeypress="handle_search(event)"></input>
-            <div class="search_btn" onclick="golist()">
-                <img src="../static/search.png" class="search-icon" onmouseover="style.opacity=0.7" onmouseout="style.opacity=1"></img>
-            </div>
-            <span class="search_many"onclick="searchmany_open()" onmouseover="style.opacity=0.7" onmouseout="style.opacity=1">批量搜尋</span>
+    <div class="contactus">
+        <div class="contacttext">
+            <div class="contactcontent">聯繫窗口: Jason.Lin</div>
+            <div class="contactcontent">上班時間: 8:30~17:30</div>
+            <div class="contactcontent">電話: 02-2697-5001</div>
+            <div class="contactcontent">電話: 0920611135</div>
+            <div class="contactcontent">信箱: jason.lin@pteamtech.com</div>
         </div>
+        <hr>
+        <div class="advice_line">
+            <textarea class="advice" placeholder="網站優化建議"></textarea><span onmouseover="style.opacity=0.7" onmouseout="style.opacity=1" class="sendadvice" onclick="sendfeedback(event)">送出</span><br>
+        </div>
+        <div class="advice_line">
+            <textarea class="advice" placeholder="電子料件需求"></textarea><span onmouseover="style.opacity=0.7" onmouseout="style.opacity=1" class="sendadvice" onclick="sendfeedback(event)">送出</span><br>
+        </div>
+        <div class="advice_line">
+            <textarea class="advice" placeholder="其他合作提議"></textarea><span onmouseover="style.opacity=0.7" onmouseout="style.opacity=1" class="sendadvice" onclick="sendfeedback(event)">送出</span>
+        </div>
+
     </div>
-    </br>    
-    </br>
-    <div class="select">
-        <span class="select-btn" onclick="goindex()">首頁</span>
-        <span class="select-btn" onclick="gostock()">庫存上傳</span>
-        <span class="select-btn" onclick="gobom()">BOM表</span>
-        <span class="select-btn" onclick="gocontact()">聯繫我們</span>
+    <div></div>
+    <div class="footer">
+        <div>聯絡我們</div>
+        <div>TEL: 02-26975001 #2027</div>
+        <div>EMAIL: jason.lin@pteamtech.com</div>
+        <div>LINE: rtyu73162</div>
+        <div>LINE@報價機器人: @397xatre</div>
     </div>
-    <hr>
     <script src="{{url_for('static', filename='page.js') }}"></script>
     <script src="{{url_for('static', filename='login.js') }}"></script>
+    <script>
+    function sendfeedback(){
+        let token = localStorage.getItem("token");
+                if (token == "null"){
+                    alert("請先註冊或是留下聯絡資訊");
+                    sign_in();
+                }
+                let button = event.target;
+                let textarea = button.parentElement.querySelector('.advice');
+                let adviceText = textarea.value;
+                fetch("/api/feedbacktoDC",{
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    "content": adviceText,
+                    "companyname": getsupplier()
+                })
+            })
+            .then(response=>response.json())
+            .then(data=>console.log(data))
+            .catch(error=>{
+                console.log(error);
+            })
+    }
+    </script>
 
 </body>
 </html>

@@ -7,12 +7,14 @@
     <meta charset="utf-8">
 </head>
 <body class="body">
+    <div class="bodylist"></div>
+    <!--
     <div class="account" id="logstatus">
         <span class="account-content" onclick="sign_in()">登入</span>
         <span class="account-content" onclick="register()">註冊</span>
     </div>
     <hr>
-    <div class="index_title">FINDSTOCK電子元件商城</div>
+    <a href="/" class="index_title">FINDSTOCK電子元件商城</a>
     </br>
     <div class="search_area">
         <div class="search">
@@ -29,8 +31,11 @@
         <span class="select-btn" onclick="goindex()">首頁</span>
         <span class="select-btn" onclick="gostock()">庫存上傳</span>
         <span class="select-btn" onclick="gobom()">BOM表</span>
+        <span class="select-btn" onclick="goorder()">詢價單</span>
         <span class="select-btn" onclick="gocontact()">聯繫我們</span>
     </div>
+    </div>
+    -->
     <hr>
     <div class="banner-block">
         <div class="changebtn">
@@ -54,6 +59,8 @@
         <div>TEL: 02-26975001 #2027</div>
         <div>EMAIL: jason.lin@pteamtech.com</div>
         <div>LINE: rtyu73162</div>
+        <div>LINE@報價機器人: @397xatre</div>
+
     </div>
     <!--註冊帳號的表單-->
     <div class="signup_block">
@@ -125,10 +132,7 @@
             let scrollamount = 800;
             pic_display.scrollLeft -= scrollamount;
         }
-        function getsupplier(){
-            let company_name = localStorage.getItem("company_name");
-            return company_name
-        }
+
 
 
 

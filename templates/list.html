@@ -7,30 +7,7 @@
     <meta charset="utf-8">
 </head>
 <body class="body">
-    <div class="account" id="logstatus">
-        <span class="account-content" onclick="sign_in()">登入</span>
-        <span class="account-content" onclick="register()">註冊</span>
-    </div>
-    <hr>
-    <div class="index_title">FINDSTOCK電子元件商城</div>
-    </br>
-    <div class="search_area">
-        <div class="search">
-            <input placeholder="請輸入產品編號" class="search-bar" onkeypress="handle_search(event)"></input>
-            <div class="search_btn" onclick="golist()">
-                <img src="../static/search.png" class="search-icon" onmouseover="style.opacity=0.7" onmouseout="style.opacity=1"></img>
-            </div>
-            <span class="search_many"onclick="searchmany_open()" onmouseover="style.opacity=0.7" onmouseout="style.opacity=1">批量搜尋</span>
-        </div>
-    </div>
-    </br>    
-    </br>
-    <div class="select">
-        <span class="select-btn" onclick="goindex()">首頁</span>
-        <span class="select-btn" onclick="gostock()">庫存上傳</span>
-        <span class="select-btn" onclick="gobom()">BOM表</span>
-        <span class="select-btn" onclick="gocontact()">聯繫我們</span>
-    </div>
+    <div class="bodylist"></div>
     <hr>
     <!--
     <div class="iteminfo">
@@ -42,26 +19,168 @@
     <hr>
     -->
     <div class="ptdata">
-        <div>自有庫存</div>
-        <img class="product-img" src="../static/wehelp.jpg"></img>
-        <div>產品交期、數量、價格</div>
+        <span class="productlist_title">自有庫存</span>
+        <img class="product-img" src="../static/wehelp.jpg"></img><br><br>
         <div></div>
+        </hr>
+    
+    <div class="table_area">
+    <table class="output_table" border="1">
+        <thead>
+            <tr>
+                <th>更新日期</th>
+                <th>產品編號</th>
+                <th>製造商</th>
+                <th>說明</th>
+                <th>庫存數量</th>
+                <th>數量/價格</th>
+                <th>訂購</th>
+            </tr>    
+          </thead>
+          <tbody class="tbody">
+            <!--
+            <tr>
+              <td>2023-11-21</td>
+              <td>55100-0670</td>
+              <td>molex</td>
+              <td>
+                <div>倉庫地點: TW</div>
+                <div>製造日期: 22+</div>
+                <div>產地: US</div>
+                <div>其他資訊: REEL</div>
+
+              </td>
+              <td>500</td>
+              <td>
+                <div>100 USD 0.5</div>
+                <div>500 USD 0.4</div>
+                <div>1000 USD 0.3</div>
+              </td>
+              <td>
+                <span>數量  </span><input></input>
+                <button>加入購物車</button>
+              </td>
+
+            </tr>
+            
+            <tr>
+              <td>6</td>
+              <td>7</td>
+              <td>8</td>
+              <td>9</td>
+              <td>10</td>
+              <td>5</td>
+              <td>5</td>
+
+            </tr>
+            -->
+            </tbody>
+    </table>
     </div>
+    </div>
+
     <hr>
     <div class="partnerdata">
-        <div>代理商庫存</div>
-        <img class="product-img" src="../static/wehelp.jpg"></img>
-        <div>產品交期、數量、價格</div>
-        <div></div>
+        <span class="productlist_title">代理商庫存</span>
+        <img class="product-img" src="../static/wehelp.jpg"></img><br><br>
+        <div>
+          <div class="table_area">
+            <table class="output_table" border="1">
+                <thead>
+                    <tr>
+                        <th>更新日期</th>
+                        <th>產品編號</th>
+                        <th>製造商</th>
+                        <th>說明</th>
+                        <th>庫存數量</th>
+                        <th>數量/價格</th>
+                        <th>訂購</th>
+                    </tr>    
+                  </thead>
+                  <tbody class="agenttbody">
+                  </tbody>
+            </table>
+            </div>
+        </div>
+
     </div>
+    <div class="footer">
+      <div>聯絡我們</div>
+      <div>TEL: 02-26975001 #2027</div>
+      <div>EMAIL: jason.lin@pteamtech.com</div>
+      <div>LINE: rtyu73162</div>
+      <div>LINE@報價機器人: @397xatre</div>
+    </div>
+
     <script src="{{url_for('static', filename='page.js') }}"></script>
     <script src="{{url_for('static', filename='login.js') }}"></script>
 
 
-    <script>
-        window.onload = function(){
-        search();
-    };
-    </script>
+  <script>
+      function getbreakprice(itemid){
+        let demandqty=parseInt(document.querySelectorAll(".demand_qty")[itemid].value);
+        let priceBreakData = document.querySelectorAll(".pricebreak_data")[itemid];
+        console.log(demandqty);
+        console.log(priceBreakData);
+
+        let breakQtys = priceBreakData.querySelectorAll(".break_qty");
+        let breakPrices = priceBreakData.querySelectorAll(".break_price");
+
+        let breakPrice = "請洽業務";
+
+        for (let i = 0; i < breakQtys.length; i++) {
+        let breakQtyValue = parseInt(breakQtys[i].textContent, 10);
+        let priceValue = breakPrices[i].textContent;
+        if (demandqty >= breakQtyValue) {
+            breakPrice = priceValue;
+        }
+      }
+
+        return breakPrice
+      }
+
+      function addItemtoRFQ(button){
+        let companyname=getsupplier();
+        let itemid=button.id;
+        console.log(itemid);
+        let price=getbreakprice(itemid);
+        let pn= document.querySelectorAll(".searchresult_pn")[itemid].textContent;
+        let qty= document.querySelectorAll(".demand_qty")[itemid].value;
+        let mfr= document.querySelectorAll(".searchresult_mfr")[itemid].textContent;
+        let remark= document.querySelectorAll(".searchresult_remark")[itemid].textContent;
+        let addbody={
+          "company_name": companyname,
+          "pn": pn,
+          "mfr": mfr,
+          "qty": qty,
+          "remarks": remark,
+          "price": price
+        };
+        fetch("/api/rfq",{
+                method: "POST",
+                headers: {
+                'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(addbody)
+            })
+            .then(response=>response.json())
+            .then(data=>{
+                console.log(data.message);
+                alert("新增完成，"+"產品編號: "+pn+"，金額: "+price);
+            })
+            .catch(error=>{
+                console.log("something error",error);
+            }) 
+        }
+  
+      let row_id=0;
+      window.addEventListener('load', ()=>{
+        
+        search().then(()=>{
+          agentLoad();
+        })
+      });
+
+  </script>
 </body>
 </html>

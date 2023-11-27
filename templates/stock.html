@@ -7,57 +7,34 @@
     <meta charset="utf-8">
 </head>
 <body class="body">
-    <div class="account" id="logstatus">
-        <span class="account-content" onclick="sign_in()">登入</span>
-        <span class="account-content" onclick="register()">註冊</span>
+    <div class="bodylist"></div>
+    <hr>
+    <div class="insert_title">新增庫存</div><br>
+    <div class="insert_line">
+        <input class="insertone_pn"  placeholder="輸入產品編號"></input>
+        <input class="insertone_qty"  placeholder="輸入庫存數量"></input>
+        <input class="insertone_mfr"  placeholder="輸入製造商"></input>
+        <span class="insert_btn" onclick="insert_one()" onmouseover="style.opacity=0.7" onmouseout="style.opacity=1">新增</span>
     </div>
     <hr>
-    <div class="index_title">FINDSTOCK電子元件商城</div>
-    </br>
-    <div class="search_area">
-        <div class="search">
-            <input placeholder="請輸入產品編號" class="search-bar" onkeypress="handle_search(event)"></input>
-            <div class="search_btn" onclick="golist()">
-                <img src="../static/search.png" class="search-icon" onmouseover="style.opacity=0.7" onmouseout="style.opacity=1"></img>
-            </div>
-            <span class="search_many"onclick="searchmany_open()" onmouseover="style.opacity=0.7" onmouseout="style.opacity=1">批量搜尋</span>
-        </div>
-    </div>
-    </br>    
-    </br>
-    <div class="select">
-        <span class="select-btn" onclick="goindex()">首頁</span>
-        <span class="select-btn" onclick="gostock()">庫存上傳</span>
-        <span class="select-btn" onclick="gobom()">BOM表</span>
-        <span class="select-btn" onclick="gocontact()">聯繫我們</span>
-    </div>
-    <hr>
-    <div>新增庫存</div><br>
-    <div>
-        <input class="insertone_pn" placeholder="輸入產品編號"></input></br></br>
-        <input class="insertone_qty" placeholder="輸入庫存數量"></input></br></br>
-        <input class="insertone_mfr" placeholder="輸入製造商"></input></br></br>
-
-        <button onclick="insert_one()">新增</button></br>
-    </div>
-    <hr>
-
-    <div>批量新增庫存</div><br>
-    <a href="{{ url_for('static', filename='upload_template.xlsx') }}" download="upload_template1.xlsx">下載模板</a>
+    <div class="insert_title">批量新增/更新庫存</div><br>
     <br>
     <br>
-    <div>
+    <div class="insert_line">
         <input type="file" class="insertmany_file" id="input"></br></br>
-        <button onclick="insert_many()">上傳</button></br>
+        <span class="select_file">提示: 請依照模板格式進行上傳</span>
+        <a class="select_file"href="{{ url_for('static', filename='upload_template.xlsx') }}" download="upload_template1.xlsx">下載模板</a>
+        <span class="insert_btn" onclick="insert_many()" onmouseover="style.opacity=0.7" onmouseout="style.opacity=1">上傳庫存</span>
     </div>
     <hr>
-    <div>刪除庫存</div><br>
-    <span>請選擇上傳日期</span><input type="date"></input><br></br>
-    <span>輸入產品編號</span><input placeholder="輸入產品編號"></input><br></br>
-    <button>刪除</button></br>
+    <div class="insert_title">刪除庫存</div><br>
+    <div class="insert_line">
+        <span>請選擇上傳日期</span><input class="delete_date" type="date"></input><br></br>
+        <span class="input_pn">輸入產品編號</span><input class="delete_pn" placeholder="輸入產品編號"></input><br></br>
+        <span class="delete_btn" onclick="deletestock()" onmouseover="style.opacity=0.7" onmouseout="style.opacity=1">刪除</span>
+    </div>
     <hr>
-    <div>庫存列表</div><br>
-    <button onclick="showstock()">顯示</button>
+    <div class="insert_title">庫存列表</div>
     <div class="stock_display">
     <table border="1">
         <thead>
@@ -70,24 +47,82 @@
             </tr>    
           </thead>
           <tbody class="tbody">
+            <!--
             <tr>
-              <td>行1</td>
-              <td>行1</td>
-              <td>行1</td>
-              <td>行1</td>
-              <td>行1</td>
+              <td>1</td>
+              <td>2</td>
+              <td>3</td>
+              <td>4</td>
+              <td>5</td>
             </tr>
             <tr>
-              <td>行2</td>
-              <td>行2</td>
-              <td>行2</td>
-              <td>行2</td>
-              <td>行2</td>
+              <td>6</td>
+              <td>7</td>
+              <td>8</td>
+              <td>9</td>
+              <td>10</td>
             </tr>
-
+            -->
+            </tbody>
     </table>
     </div>
     <hr>
+
+    <div class="footer">
+        <div>聯絡我們</div>
+        <div>TEL: 02-26975001 #2027</div>
+        <div>EMAIL: jason.lin@pteamtech.com</div>
+        <div>LINE: rtyu73162</div>
+        <div>LINE@報價機器人: @397xatre</div>
+    </div>
+        <!--註冊帳號的表單-->
+        <div class="signup_block">
+            <form class="signup">
+                <div class="deco_bar"></div>
+                <div class="signup_text">註冊會員帳號</div>
+                <img src="../static/close.png" class="close_button" onclick="close_form()"></img>
+                <input class="register_input" name="name" placeholder="*輸入聯絡人姓名*"></input>
+                <input class="register_input" name="email" placeholder="*輸入電子郵件*"></input>
+                <input class="register_input" name="password" placeholder="*輸入密碼*" type="password"></input>
+                <input class="register_input" name="company_name" placeholder="*輸入公司名稱*"></input>
+                <input class="register_input" name="phone" placeholder="輸入電話&分機"></input>
+                <input class="register_input" name="tax_id" placeholder="輸入統編"></input>
+                <input class="register_input" name="address" placeholder="輸入收件地址"></input>
+                <input class="register_input" name="brand" placeholder="常用電子零件品牌/優勢品牌"></input>
+                <div>備註: 註冊後可於庫存頁面上傳庫存</div>
+    
+                <input class="submit_btn" onclick="register_user()" value="註冊新帳戶"></input>
+                <div class="signup_link"><span id="have_account">已經有帳戶了？</span><span onclick="sign_in()">點此登入</span></div>
+            </form>
+        </div>
+    
+        <!--登入會員的表單-->
+        <div class="login_block">
+            <div class="login">
+                <div class="deco_bar"></div>
+                <div class="login_text">登入會員帳號</div>
+                <img src="../static/close.png" class="close_button" onclick="close_form()"></img>
+                <input class="login_input" placeholder="輸入電子信箱"></input>
+                <input class="login_input" placeholder="輸入密碼" type="password"></input>
+                <input class="submit_btn" onclick="login()" value="登入帳戶"></input>
+                <div class="login_link">還沒有帳戶？<span onclick="register()">點此註冊</span></div>
+            </div>
+        </div>
+        <!--批量搜尋功能-->
+        <div class="search_many_block">
+            <div class="searchmany_form">
+                <div class="mutiple_title">批量搜尋</div>
+                <img src="../static/close.png" class="searchmany_close" onclick="searchmany_close()"></img>
+                <div class="inputmuti_area">
+                    <textarea class="mutiple_input" placeholder="將產品型號和數量複製到此處，支援多行"></textarea>
+                </div>
+                <div>範例:<br>
+                    55100-0670 100<br>
+                    PAP-02V-S 200
+                </div><br>
+                <div class="do_mutiplesearch" onmouseover="style.opacity=0.7" onmouseout="style.opacity=1">開始搜尋</div>
+            </div>
+        </div>
     <script src="{{url_for('static', filename='page.js') }}"></script>
     <script src="{{url_for('static', filename='login.js') }}"></script>
 
@@ -97,6 +132,10 @@
             let pn = document.querySelector(".insertone_pn").value;
             let qty = document.querySelector(".insertone_qty").value;
             let mfr = document.querySelector(".insertone_mfr").value;
+            if (!pn || !qty || !mfr) {
+                alert("請輸入所有欄位");
+                return;
+            }
             fetch("/api/product/"+pn,{
                 method: "POST",
                 headers:{
@@ -112,6 +151,7 @@
         .then(data=>{
             console.log(data.id);
             alert("新增成功");
+            setTimeout(showstock(),500);
             console.log("success");
         })
         .catch(error=>{
@@ -133,6 +173,8 @@
                 .then(response=>response.json())
                 .then(data=>{
                     console.log(data.message);
+                    alert("新增成功");
+                    setTimeout(showstock(),500);
                 })
                 .catch(error=>{
                     console.log("上傳失敗");
@@ -157,11 +199,12 @@
                 })
             .then(response=>response.json())
             .then(data=>{
-                console.log(data.data);
                 let table=document.querySelector(".tbody");
                 table.innerHTML="";
                 data.data.forEach(item => {
                     let row = document.createElement("tr");
+                    row.className = "stockdata";
+
                     let supplierCell = document.createElement("td");
                     let uploadTimeCell = document.createElement("td");
                     let partNumberCell = document.createElement("td");
@@ -174,6 +217,13 @@
                     stockQtyCell.textContent = item.qty;
                     manufacturerCell.textContent = item.mfr;
 
+                    supplierCell.className="celldata";
+                    uploadTimeCell.className="celldata";
+                    partNumberCell.className="celldata";
+                    stockQtyCell.className="celldata";
+                    manufacturerCell.className="celldata";
+
+
                     row.appendChild(supplierCell);
                     row.appendChild(uploadTimeCell);
                     row.appendChild(partNumberCell);
@@ -183,9 +233,64 @@
                 });
             })
             .catch(error=>{
-                console.log("something error")
+                console.log(error);
+                console.log("something error");
             });
             };
+    
+    
+        function deletestock(){
+            let selectDate=document.querySelector(".delete_date").value;
+            let selectPn=document.querySelector(".delete_pn").value;
+            if (selectDate && selectPn){
+                fetch("/api/product/"+selectPn,{
+                    method: "DELETE",
+                    headers:{
+                    'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                    "supplier": getsupplier(),
+                    "pn": selectPn,
+                    "date": selectDate
+                    })
+                })
+            .then(response=>response.json())
+            .then(data=>{
+                console.log(data.message);
+                setTimeout(showstock(),500);
+                alert("已刪除成功");
+            })
+            .catch(error=>{
+                console.log("something error")
+            });
+            } else if(selectDate){
+                fetch("/api/product/123",{
+                    method: "DELETE",
+                    headers:{
+                    'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                    "supplier": getsupplier(),
+                    "date": selectDate
+                    })
+                })
+            .then(response=>response.json())
+            .then(data=>{
+                console.log(data.message);
+                setTimeout(showstock(),500);
+                alert("已刪除成功");
+            })
+            .catch(error=>{
+                console.log("something error")
+            });
+            } else {
+                alert("請選擇日期及產品編號");
+            }
+        }
+    
+ 
+        window.addEventListener('load', showstock);
+
     </script>
 </body>
 </html>

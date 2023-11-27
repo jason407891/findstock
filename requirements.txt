@@ -1,0 +1,10 @@
+Flask
+boto3
+mysql-connector-python
+requests
+datetime
+pymongo
+pandas
+PyJWT
+openpyxl
+json

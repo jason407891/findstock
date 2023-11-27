@@ -13,7 +13,8 @@ import math
 import pandas as pd
 import jwt
 from jwt.exceptions import DecodeError
-
+import findchip
+import json
 
 
 aws_access_key_id = "AKIAUFTPQN5O75N6A7EW"
@@ -41,7 +42,7 @@ dbconfig = {
 
 connection_pool = pooling.MySQLConnectionPool(
     pool_name="my_pool",
-    pool_size=5,  # 适当调整池的大小
+    pool_size=5, 
     **dbconfig
 )
 
@@ -66,6 +67,29 @@ def bom():
 def contact():
 	return render_template("contact.html")
 
+@app.route("/rfq")
+def rfq():
+	return render_template("rfq.html")
+
+
+
+@app.route("/api/agent/product/<partnumber>",methods=["GET","POST"])
+def handle_agent(partnumber):
+	try:
+		url = "https://www.findchips.com/search/"+str(partnumber)
+		response = requests.get(url)
+		result_dg=findchip.findchipsDes(response,1588,partnumber)
+		result_mouser=findchip.findchips(response,1577,partnumber)
+		result_tti=findchip.findchips(response,1545,partnumber)
+		result_element=findchip.findchipsDes(response,2953375,partnumber)
+		result_arrow=findchip.findchipsDes(response,1538,partnumber)
+		return jsonify({"data":[result_dg,result_mouser,result_tti,result_element,result_arrow]})
+	except Exception as e:
+		return jsonify({"data":e})
+
+
+
+
 @app.route("/api/product/<partnumber>",methods=["POST","GET","DELETE"])
 def handle_search(partnumber):
 	db=client['pteam']
@@ -82,7 +106,24 @@ def handle_search(partnumber):
 						item[key] = "NA"
 			for item in data:
 				item['_id'] = str(item['_id'])
-			return jsonify({"data":data})
+			return_data=[]
+			for item in data:
+				#將price變陣列
+				price_str = item.get("price","NA")
+				price_data = json.loads(item.get("price", "[]"))
+				partial = {
+					"date":item.get("date","NA"),
+					"pn": item.get("pn","NA"),
+					"mfr": item.get("mfr","NA"),
+					"qty": item.get("qty","NA"),
+					"price": price_data,
+					"dc": item.get("dc","NA"),
+					"location": item.get("location","NA"),
+					"coo": item.get("coo","NA"),
+					"noted": item.get("noted","NA")
+				}
+				return_data.append(partial)
+			return jsonify({"data":return_data})
 		except Exception as e:
 			return jsonify({"data":e})
 	elif request.method == "POST":
@@ -97,10 +138,20 @@ def handle_search(partnumber):
 		return jsonify({"message": "Product added successfully", "id": str(result.inserted_id)})
 	elif request.method== "DELETE":
 		data=request.get_json()
-		filter_field={
-			"date":data["date"],
-			"pn":partnumber
-		}
+		#有料號的情況
+		if "pn" in data:
+			filter_field={
+				"date": data["date"],
+				"pn": data["pn"],
+				"supplier": data["supplier"]
+			}
+			print(data["date"])
+		#刪除同日期上傳的所有料號
+		else:
+			filter_field={
+				"date": data["date"],
+				"supplier": data["supplier"]
+			}
 		result = collection.delete_many(filter_field)
 		if result.deleted_count == 0:
 			return jsonify({"message": "Product not deleted successfully"})
@@ -114,7 +165,8 @@ def api_products():
 	try:
 		upload_file = request.files["file"]
 		supplier = request.form.get("supplier")
-		df = pd.read_excel(upload_file)
+		df = pd.read_excel(upload_file, dtype={"pn": str})
+		df.fillna('NA', inplace=True)
 		data = df.to_dict(orient="records")
 		for insert_stock in data:
 			#處理excel表格裡面的supplier欄位
@@ -127,9 +179,11 @@ def api_products():
 			#處理excel表格裡面的price欄位
 			if "price" not in insert_stock:
 				insert_stock["price"] = '[{"goods_price": "請洽業務", "goods_num": "1"}]'
-		print(data)
-		
-		result = collection.insert_many(data)
+			existing_record = collection.find_one({"pn": insert_stock["pn"], "supplier": supplier})
+			if existing_record:
+	  			collection.update_one({"_id": existing_record["_id"]}, {"$set": insert_stock})
+			else:
+				collection.insert_one(insert_stock)
 		return jsonify({"message": "Product added successfully"})
 	except Exception as e:
 		return jsonify({"message":str(e)})
@@ -142,7 +196,7 @@ def api_showstock():
 	data=request.get_json()
 	supplier=data["supplier"]
 	query={"supplier":supplier}
-	data=list(collection.find(query).limit(10))
+	data=list(collection.find(query).limit(100))
 	new_data=[]
 	for item in data:
 		item["_id"]=str(item["_id"])
@@ -154,25 +208,6 @@ def api_showstock():
 
 @app.route("/api/user", methods=["GET","POST"])
 def api_user():
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 	connection = connection_pool.get_connection()
 	try:
 		data = request.get_json()
@@ -203,6 +238,8 @@ def api_user():
 			return jsonify({"error":True,"message":str(e)}), 500
 	finally:
 	    connection.close()
+
+
 @app.route("/api/user/auth", methods=["PUT","GET"])
 def api_login():
     connection = connection_pool.get_connection()
@@ -240,5 +277,119 @@ def api_login():
     finally:
         connection.close()
 
+
+@app.route("/api/rfq/",methods=["GET","POST","DELETE"])
+def api_rfq():
+	connection = connection_pool.get_connection()
+	try:
+		if request.method == "GET":
+			try:
+				company_name=request.args.get("companyname")
+				cursor = connection.cursor()
+				query = "SELECT * FROM rfqlist WHERE company_name = %s"
+				cursor.execute(query, (company_name,))
+				results = cursor.fetchall()
+				rfqlists = []
+				item_count=1
+				for row in results:
+					rfqlist = {
+						"rfq_id":row[0],
+						"itemcount":item_count,
+						"customer_name": row[1],
+						"mfr":row[2],
+						"pn":row[3],
+						"qty":row[4],
+						"suggest_price":row[5],
+						"remarks":row[6],
+						"time":row[7]
+					}
+					rfqlists.append(rfqlist)
+					item_count+=1
+				return jsonify({"response":rfqlists})
+			except Exception as e:
+				return jsonify({"error":True, "response":str(e)}),500
+		elif request.method=="POST":
+			try:
+				data=request.get_json()
+				company_name=data["company_name"]
+				mfr=data["mfr"]
+				pn=data["pn"]
+				qty=data["qty"]
+				price=data.get("price","NA")
+				remarks=data.get("remarks","NA")
+				cursor = connection.cursor()
+				query = "INSERT INTO rfqlist (company_name, mfr, pn, qty, suggested_price, remarks) VALUES (%s, %s, %s, %s, %s, %s)"
+				cursor.execute(query, (company_name, mfr, pn, qty, price, remarks))
+				connection.commit()
+				return jsonify({"message":"create successfully"})
+			except Exception as e:
+				return jsonify({"error":True, "response":str(e)}),500
+		elif request.method=="DELETE":
+			try:
+				company_name=request.args.get("companyname")
+				cursor = connection.cursor()
+				query = "DELETE FROM rfqlist WHERE company_name = %s"
+				cursor.execute(query,(company_name,))
+				connection.commit()
+				return jsonify({"message": "ALL Record deleted successfully"})
+			except Exception as	e:
+				return jsonify({"error": True, "response": str(e)}), 500
+	finally:
+		connection.close()
+
+
+@app.route("/api/rfq/<int:data_id>",methods=["DELETE"])
+def delete_rfq(data_id):
+	connection = connection_pool.get_connection()
+	try:
+		cursor = connection.cursor()
+		query = "DELETE FROM rfqlist WHERE id = %s"
+		cursor.execute(query,(data_id,))
+		connection.commit()
+		return jsonify({"message": "Record deleted successfully"})
+	except Exception as	e:
+	    return jsonify({"error": True, "response": str(e)}), 500
+	finally:
+		connection.close()
+
+
+def format_cell(content, width=12):
+    return (content + ' ' * width)[:width]
+
+@app.route("/api/rfqtoDC",methods=["POST"])
+def api_rfqtodc():
+    webhook_url="https://discord.com/api/webhooks/1163495849842704565/I7SJdtkonFMMvuXFs3GQTshXtwCB47N3juFGLNtBf1bLAevRIXukZdH82j31jfhRbCxQ"
+    data=request.get_json()
+    table = "```\n"
+    table += "RFQ客戶:"+data["companyname"]+"\n"
+    table += "| " + format_cell("項次",width=2) + "| " + format_cell("製造商",width=6)
+    table += "| " + format_cell("產品編號",width=8) + "| " + format_cell("需求數量",width=4)
+    table += "| " + format_cell("建議價格",width=8) + "|\n"
+    for item in data['content']:
+        table += "| " + format_cell(item['itemid'],width=4)
+        table += "| " + format_cell(item['mfr'],width=8)
+        table += "| " + format_cell(item['pn'])
+        table += "| " + format_cell(item['qty'],width=6)
+        table += "| " + format_cell(item['price']) + "|\n"
+    table += "```"
+
+    discord_data = {"content": table}
+    headers = {'Content-Type': 'application/json'}
+    requests.post(webhook_url, data=json.dumps(discord_data), headers=headers)
+    return jsonify({"message": "RFQ send successfully"})
+
+@app.route("/api/feedbacktoDC",methods=["POST"])
+def api_feedbacktoDC():
+	try:
+		webhook_url="https://discord.com/api/webhooks/1163495849842704565/I7SJdtkonFMMvuXFs3GQTshXtwCB47N3juFGLNtBf1bLAevRIXukZdH82j31jfhRbCxQ"
+		data=request.get_json()
+		content="客戶名稱: "+data["companyname"]+"\n"
+		content+="建議內容: "+data["content"]
+		output={"content":content}
+		headers = {'Content-Type': 'application/json'}
+		requests.post(webhook_url, data=json.dumps(output), headers=headers)
+		return jsonify({"message": "feedback send successfully"})
+	except Exception as e:
+		return jsonify({"message": "fail to give feedback"+str(e)})
 
 app.run(host="0.0.0.0", port=3000)
