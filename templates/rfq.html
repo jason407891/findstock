@@ -90,6 +90,8 @@
         }
 
         function update_rfqlist(){
+            checkLogin();
+            
             let companyname=getsupplier();
             fetch("/api/rfq?companyname="+encodeURIComponent(companyname))
             .then(response=>response.json())

@@ -188,6 +188,7 @@
 
 
         function showstock(){
+            checkLogin();
             fetch("/api/showstock",{
                     method: "POST",
                     headers:{
@@ -289,6 +290,8 @@
         }
     
  
+
+
         window.addEventListener('load', showstock);
 
     </script>

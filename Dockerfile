@@ -7,6 +7,7 @@ WORKDIR /app
 # Copy the app package and package-lock.json file
 COPY requirements.txt ./
 COPY app.py ./
+COPY findchip.py ./
 COPY static ./static
 COPY templates ./templates
 

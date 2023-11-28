@@ -209,6 +209,22 @@ function do_mutiplesearch(){
     alert("批量搜尋，功能開發中");
 }
 
+function checkLogin(){
+    let token = localStorage.getItem("token");
+    if (token=="null"){
+        alert("請先登入");
+        window.location.href="/";
+        return;
+    }
+}
+function checkLogin_list(){
+    let token = localStorage.getItem("token");
+    if (token=="null"){
+        alert("請先登入");
+        window.location.reload()
+        return;
+    }
+}
 
 window.onload = function() {
     showList()
