@@ -14,6 +14,7 @@
         <input class="insertone_pn"  placeholder="輸入產品編號"></input>
         <input class="insertone_qty"  placeholder="輸入庫存數量"></input>
         <input class="insertone_mfr"  placeholder="輸入製造商"></input>
+        <input type="file" class="insertone_profile"></input>
         <span class="insert_btn" onclick="insert_one()" onmouseover="style.opacity=0.7" onmouseout="style.opacity=1">新增</span>
     </div>
     <hr>
@@ -132,20 +133,22 @@
             let pn = document.querySelector(".insertone_pn").value;
             let qty = document.querySelector(".insertone_qty").value;
             let mfr = document.querySelector(".insertone_mfr").value;
+            let file=document.querySelector(".insertone_profile").files[0];
             if (!pn || !qty || !mfr) {
                 alert("請輸入所有欄位");
                 return;
             }
+            let formData = new FormData();
+            formData.append("qty",qty);
+            formData.append("mfr",mfr);
+            formData.append("supplier",getsupplier());
+            if(file){
+                formData.append("profile", file);
+            }
+
             fetch("/api/product/"+pn,{
                 method: "POST",
-                headers:{
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                "qty":  qty,
-                "mfr": mfr,
-                "supplier": getsupplier()
-            })
+                body: formData
             })
             .then(response=>response.json())
         .then(data=>{

@@ -4,11 +4,12 @@ import re
 from datetime import datetime
 
 
-pn="T92S7A22-24"
+pn="39-00-0038"
 url = "https://www.findchips.com/search/"+str(pn)
 response = requests.get(url)
 
-def findchips(response,supplier_code,name):
+
+def findchips(response,supplier_code,name, profit):
     price_results=[]
     if response.status_code == 200:
         soup = BeautifulSoup(response.text, 'html.parser')
@@ -43,9 +44,11 @@ def findchips(response,supplier_code,name):
                     labels = price.find_all(class_="label")
                     values = price.find_all(class_="value")
                     for i in range(len(labels)):
+                        base_price=values[i]['data-baseprice'].strip()
+                        resultprice=round(float(base_price)*profit,2)
                         price_info = {
                             "goods_num":labels[i].text.strip(),
-                            "goods_price":values[i].text.strip()
+                            "goods_price":resultprice
                         }
                         price_breaks.append(price_info)
                 price_result["price"] = price_breaks
@@ -60,7 +63,7 @@ def findchips(response,supplier_code,name):
     else:
         return({"results":"SOMETHING ERROR"})
 
-def findchipsDes(response,supplier_code,name):
+def findchipsDes(response,supplier_code,name, profit):
     price_results=[]
     if response.status_code == 200:
         soup = BeautifulSoup(response.text, 'html.parser')
@@ -95,9 +98,11 @@ def findchipsDes(response,supplier_code,name):
                     labels = price.find_all(class_="label")
                     values = price.find_all(class_="value")
                     for i in reversed(range(len(labels))):
+                        base_price=values[i]['data-baseprice'].strip()
+                        resultprice=round(float(base_price)*profit,2)
                         price_info = {
                             "goods_num":labels[i].text.strip(),
-                            "goods_price":values[i].text.strip()
+                            "goods_price": resultprice
                         }
                         price_breaks.append(price_info)
                 price_result["price"] = price_breaks

@@ -8,6 +8,7 @@ WORKDIR /app
 COPY requirements.txt ./
 COPY app.py ./
 COPY findchip.py ./
+COPY mouser.py ./
 COPY static ./static
 COPY templates ./templates
 

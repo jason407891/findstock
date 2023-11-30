@@ -7,25 +7,121 @@
     <meta charset="utf-8">
 </head>
 <body class="body">
-    <h2>FINDSTOCK電子元件商城</h2>
-    <div>搜尋</div>
-    <span>首頁</span>
-    <span>訂單</span>    
-    <span>庫存</span>
-    <span>BOM表</span>
-    <span>聯繫我們</span>
-
-    <span>會員中心<span>
-    <span>購物車<span>
-
+    <h2>後台管理系統</h2>
     <hr>
+    <div class="adminBody">
+        <div class="adminSelect">
+            <div class="adminSelection" onclick="showAllUser()">使用者列表</div>
+            <div class="adminSelection" onclick="showproductImage()">產品資料</div>
+            <div class="adminSelection">利潤調整</div>
+            <div class="adminSelection">詢價記錄</div>
+        </div>
+        <div class="adminContent">
+            <!--使用者列表-->
+            <div class="adminUserList">
+            </div>
+            <!--產品圖片-->
+            <div class="productImage">
+            </div>
+            <!--詢價紀錄-->
+            <div class="rfqRecord">
+            </div>
+            <!--利潤設定-->
+            <div class="profitSet">
+            </div>
 
+            </div>
+        </div>
+        </div>
     </div>
 
          
 
+    <script src="{{url_for('static', filename='admin.js') }}"></script>
+    <script src="{{url_for('static', filename='page.js') }}"></script>
+    <script src="{{url_for('static', filename='login.js') }}"></script>
 
     <script>
+        function checkLogin(){
+            let user = localStorage.getItem("company_name");
+            if (user!="admin"){
+                alert("請先登入");
+                window.location.href="/";
+                return;
+            }
+        }
+        function showAllUser(){
+            hideAll();
+            let userlist = document.querySelector(".adminUserList");
+            userlist.style.display="flex";
+            let board=document.querySelector(".adminUserList");
+            fetch("/api/adminGetUser")
+            .then(response=>response.json())
+            .then(data => {
+            let table = document.createElement("table");
+            let thead = document.createElement("thead");
+            let headerRow = document.createElement("tr");
+            ["編號", "姓名", "電子郵件", "公司名稱", "電話", "統編", "地址", "優勢品牌"].forEach(text => {
+                let th = document.createElement("th");
+                th.textContent = text;
+                headerRow.appendChild(th);
+            });
+            thead.appendChild(headerRow);
+            table.appendChild(thead);
+            let tbody = document.createElement("tbody");
+            data.forEach(user => {
+                let tr = document.createElement("tr");
+                let useridTd = document.createElement("td");
+                useridTd.textContent = user.user_id;
+                let nameTd = document.createElement("td");
+                nameTd.textContent = user.name;
+                let emailTd = document.createElement("td");
+                emailTd.textContent = user.email;
+                let companyNameTd = document.createElement("td");
+                companyNameTd.textContent = user.company_name;
+                let phoneTd = document.createElement("td");
+                phoneTd.textContent = user.phone;
+                let taxidTd = document.createElement("td");
+                taxidTd.textContent = user.tax_id;
+                let addressTd = document.createElement("td");
+                addressTd.textContent = user.address;
+                let brandTd = document.createElement("td");
+                brandTd.textContent = user.brand;
+                
+                tr.appendChild(useridTd);
+                tr.appendChild(nameTd);
+                tr.appendChild(emailTd);
+                tr.appendChild(companyNameTd);
+                tr.appendChild(phoneTd);
+                tr.appendChild(taxidTd);
+                tr.appendChild(addressTd);
+                tr.appendChild(brandTd);
+
+
+                tbody.appendChild(tr);
+            });
+            table.appendChild(tbody);
+            board.appendChild(table);
+        })
+            .catch(error=>{
+                console.log(error);
+            })
+        }
+        
+        
+        function showproductImage(){
+            hideAll();
+            let productImage = document.querySelector(".productImage");
+            productImage.style.display="flex";
+            console.log("123");
+        }
+        
+        
+        window.onload = function() {
+            checkLogin();
+        };
+
+
     </script>
 </body>
 </html>

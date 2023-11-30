@@ -14,7 +14,9 @@ import pandas as pd
 import jwt
 from jwt.exceptions import DecodeError
 import findchip
+import mouser
 import json
+from operator import itemgetter
 
 
 aws_access_key_id = "AKIAUFTPQN5O75N6A7EW"
@@ -72,18 +74,23 @@ def rfq():
 	return render_template("rfq.html")
 
 
+@app.route("/admin")
+def admin():
+	return render_template("admin.html")
+
 
 @app.route("/api/agent/product/<partnumber>",methods=["GET","POST"])
 def handle_agent(partnumber):
 	try:
 		url = "https://www.findchips.com/search/"+str(partnumber)
 		response = requests.get(url)
-		result_dg=findchip.findchipsDes(response,1588,partnumber)
-		result_mouser=findchip.findchips(response,1577,partnumber)
-		result_tti=findchip.findchips(response,1545,partnumber)
-		result_element=findchip.findchipsDes(response,2953375,partnumber)
-		result_arrow=findchip.findchipsDes(response,1538,partnumber)
-		return jsonify({"data":[result_dg,result_mouser,result_tti,result_element,result_arrow]})
+		result_dg=findchip.findchipsDes(response,1588,partnumber,32*1.1) # DGKEY
+		result_mouser=findchip.findchips(response,1577,partnumber,32*1.1) # MOUSER
+		result_tti=findchip.findchips(response,1545,partnumber,32*1.3) # TTI
+		result_element=findchip.findchipsDes(response,2953375,partnumber,1.1) # ELEMENT
+		result_arrow=findchip.findchipsDes(response,1538,partnumber,32*1.2) #ARROW
+		result_master=findchip.findchipsDes(response,1560,partnumber,32*1.3) #MASTER
+		return jsonify({"data":[result_dg,result_mouser,result_tti,result_element,result_arrow,result_master]})
 	except Exception as e:
 		return jsonify({"data":e})
 
@@ -127,15 +134,26 @@ def handle_search(partnumber):
 		except Exception as e:
 			return jsonify({"data":e})
 	elif request.method == "POST":
-		data=request.get_json()
-		data["pn"] = partnumber
-		current_time=datetime.now()
-		date=current_time.date()
-		datestr= date.strftime("%Y-%m-%d")
-		data["date"] = datestr
-		data["price"] = '[{"goods_price": "請洽業務", "goods_num": "1"}]'
-		result = collection.insert_one(data)
-		return jsonify({"message": "Product added successfully", "id": str(result.inserted_id)})
+		try:
+			data = request.form.to_dict()
+			data["pn"] = partnumber
+			current_time=datetime.now()
+			date=current_time.date()
+			datestr= date.strftime("%Y-%m-%d")
+			data["date"] = datestr
+			data["price"] = '[{"goods_price": "請洽業務", "goods_num": "1"}]'
+			result = collection.insert_one(data)
+			#處理上傳圖片
+			if 'profile' in request.files and request.files['profile']:
+				file = request.files['profile']
+				s3 = boto3.client('s3',region_name='ap-southeast-2', aws_access_key_id=aws_access_key_id, aws_secret_access_key=aws_secret_access_key)
+				timestring=str(datetime.now().minute)+str(datetime.now().second)
+				filename=data["pn"]+"_"+timestring+".png"
+				s3.upload_fileobj(file,"findstock",filename)
+				s3.put_object_acl(Bucket='findstock', Key=filename, ACL='public-read') #設定成公開
+			return jsonify({"message": "Product added successfully", "id": str(result.inserted_id)})
+		except Exception as e:
+			return jsonify({"message":str(e)}),500
 	elif request.method== "DELETE":
 		data=request.get_json()
 		#有料號的情況
@@ -168,6 +186,21 @@ def api_products():
 		df = pd.read_excel(upload_file, dtype={"pn": str})
 		df.fillna('NA', inplace=True)
 		data = df.to_dict(orient="records")
+		insert_data = []
+		for insert_stock in data:
+			insert_stock["supplier"] = supplier
+			current_time = datetime.now()
+			datestr = current_time.strftime("%Y-%m-%d")
+			insert_stock["date"] = datestr
+			if "price" not in insert_stock:
+			    insert_stock["price"] = '[{"goods_price": "請洽業務", "goods_num": "1"}]'
+			insert_data.append(insert_stock)
+
+		if insert_data:
+			collection.insert_many(insert_data)
+		return jsonify({"message": "Products added successfully"})
+
+		'''
 		for insert_stock in data:
 			#處理excel表格裡面的supplier欄位
 			insert_stock["supplier"]=supplier
@@ -185,6 +218,7 @@ def api_products():
 			else:
 				collection.insert_one(insert_stock)
 		return jsonify({"message": "Product added successfully"})
+		'''
 	except Exception as e:
 		return jsonify({"message":str(e)})
 
@@ -196,14 +230,37 @@ def api_showstock():
 	data=request.get_json()
 	supplier=data["supplier"]
 	query={"supplier":supplier}
-	data=list(collection.find(query).limit(100))
+	data=list(collection.find(query).sort("_id",-1).limit(50))
 	new_data=[]
 	for item in data:
 		item["_id"]=str(item["_id"])
 		new_data.append(item)
-	print(new_data)
 
 	return jsonify({"data": new_data})
+
+@app.route("/api/adminGetUser", methods=["GET"])
+def admin_user():
+	connection = connection_pool.get_connection()
+	try:
+		cursor = connection.cursor(dictionary=True)
+		cursor.execute("SELECT * FROM users")
+		users = cursor.fetchall()
+		cursor.close()
+		return jsonify(users), 200
+	except Exception as e:
+		return jsonify({"error": True, "message": str(e)}), 500
+	finally:
+		connection.close()
+
+
+@app.route("/api/info/product/<partnumber>",methods=["GET","POST"])
+def api_productinfor(partnumber):
+	try:
+		response=mouser.getdata(partnumber)
+		return jsonify({"data":response})
+	except Exception as e:
+		return jsonify({"data":e})
+
 
 
 @app.route("/api/user", methods=["GET","POST"])
@@ -391,5 +448,44 @@ def api_feedbacktoDC():
 		return jsonify({"message": "feedback send successfully"})
 	except Exception as e:
 		return jsonify({"message": "fail to give feedback"+str(e)})
+
+@app.route("/api/image/product/<partnumber>")
+def api_showUploadImage(partnumber):
+	try:
+		s3 = boto3.client('s3',region_name='ap-southeast-2', aws_access_key_id=aws_access_key_id, aws_secret_access_key=aws_secret_access_key)
+		response = s3.list_objects_v2(Bucket="findstock", Prefix=partnumber)
+
+		files = []
+		if 'Contents' in response:
+			for item in response['Contents']:
+				files.append(item['Key'])
+
+		return jsonify({"data":files})
+	except Exception as e:
+		return jsonify({"data":str(e)}),500
+
+@app.route("/api/allimg")
+def api_allimg():
+	try:
+		s3 = boto3.client('s3',region_name='ap-southeast-2', aws_access_key_id=aws_access_key_id, aws_secret_access_key=aws_secret_access_key)
+		response = s3.list_objects_v2(Bucket="findstock")
+		files = []
+		if 'Contents' in response:
+			sorted_files = sorted(response['Contents'], key=itemgetter('LastModified'), reverse=True)
+			for item in sorted_files[:20]:
+				files.append(item['Key'])
+		return jsonify({"data":files})
+	except Exception as e:
+		return jsonify({"data":str(e)}),500
+
+@app.route("/api/getAllBrand")
+def api_allbrand():
+	db=client['pteam']
+	collection=db['linestock']
+	distinct_brands = collection.distinct('mfr')
+	return jsonify({"data":distinct_brands})
+
+
+	
 
 app.run(host="0.0.0.0", port=3000)

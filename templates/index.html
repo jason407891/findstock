@@ -37,6 +37,8 @@
     </div>
     -->
     <hr>
+
+    
     <div class="banner-block">
         <div class="changebtn">
             <img src="../static/left_arrow.png" class="pic_left_btn" onclick="scroll_left()">
@@ -48,11 +50,33 @@
             <img src="../static/index2.png" class="banner-img"></img>
         </div>
     </div>
+
+    <div class="news">
+        <div class="newscontent">全球供應商貨源</div>
+        <div class="newscontent">1000萬+電子零件即時更新</div>
+        <div class="newscontent">專業供應鏈支持</div>
+        <div class="newscontent">賣家招募中</div>
+        <div class="newscontent">不限金額免運費</div>
+    </div>
+    <hr>
     <div class="advantage-text">優勢品牌</div>
     <div class="advantage">
-        <img class="brand-list" src="../static/TELOGO.png"></img>
-        <img class="brand-list" src="../static/JSTLOGO.jpg"></img>
-        <img class="brand-list" src="../static/MOLEXLOGO.jpg"></img>
+        <img class="brand-list" src="https://jasonteststage3.s3.ap-southeast-2.amazonaws.com/TELOGO.png"></img>
+        <img class="brand-list" src="https://jasonteststage3.s3.ap-southeast-2.amazonaws.com/JSTLOGO.jpg"></img>
+        <img class="brand-list" src="https://jasonteststage3.s3.ap-southeast-2.amazonaws.com/MOLEXLOGO.jpg"></img>
+        <img class="brand-list" src="https://jasonteststage3.s3.ap-southeast-2.amazonaws.com/TILOGO.png"></img>
+        <img class="brand-list" src="https://jasonteststage3.s3.ap-southeast-2.amazonaws.com/VISHAYLOGO.png"></img>
+        <img class="brand-list" src="https://jasonteststage3.s3.ap-southeast-2.amazonaws.com/HRSLOGO.png"></img>
+
+    </div>
+    <hr>
+    <div class="advantage-text">最新上傳</div>
+    <div class="newUploadContainer"></div>
+    <hr>
+    <div class="brandline">
+        <div class="lookAllBrand" onmouseover="style.opacity=0.7" onmouseout="style.opacity=1" onclick="getAllmfr()">查看所有品牌</div>
+    </div>
+    <div class="brandContainer">
     </div>
     <div class="footer">
         <div>聯絡我們</div>
@@ -132,6 +156,49 @@
             let scrollamount = 800;
             pic_display.scrollLeft -= scrollamount;
         }
+
+        function getNewImg(){
+            fetch("/api/allimg")
+            .then(response=>response.json())
+            .then(data=>{
+                let imgContainer = document.querySelector(".newUploadContainer")
+                data.data.forEach(imgLink=>{
+                    let imgElement=document.createElement("img");
+                    let basicUrl="https://findstock.s3.ap-southeast-2.amazonaws.com/"
+                    imgElement.src=basicUrl+imgLink;
+                    imgElement.className="indexProductImg";
+                    imgContainer.appendChild(imgElement);
+                })
+            })
+            .catch(error=>{
+                console.log(error);
+            })
+        }
+
+        function getAllmfr(){
+            let container=document.querySelector(".brandContainer");
+            if (container.innerHTML!==""){container.innerHTML="";}
+            else{
+            fetch("/api/getAllBrand")
+            .then(response=>response.json())
+            .then(data=>{
+                console.log(data);
+                data.data.forEach(mfr=>{
+                    let divElement=document.createElement("div");
+                    divElement.textContent=mfr
+                    divElement.className="brandlistcontent"
+                    container.appendChild(divElement);
+                }
+                )
+            })
+            .catch(error=>{
+                console.log(error);
+            })}
+            
+        }
+
+        window.addEventListener('load', ()=>{getNewImg();})
+
 
 
 

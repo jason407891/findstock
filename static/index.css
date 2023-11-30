@@ -93,7 +93,6 @@
     position: absolute;
     overflow: hidden;
     width: 800px;
-    top:250px;
 }
 
 .advantage-text{
@@ -288,7 +287,7 @@
 
 /*設定第N列的欄位寬*/
 .output_table th:nth-child(1) { width: 10%; }
-.output_table th:nth-child(2) { width: 10%; }
+.output_table th:nth-child(2) { width: 20%; }
 .output_table th:nth-child(3) { width: 10%; }
 .output_table th:nth-child(4) { width: 20%; }
 .output_table th:nth-child(5) { width: 10%; }
@@ -401,6 +400,8 @@
 .productlist_title{
     font-size: 20px;
     margin-left: 10px;
+    margin-top: 30px;
+    margin-bottom: 30px;
 }
 .rfq_title{
     font-size: 20px;
@@ -489,5 +490,141 @@
     align-items: center;
     justify-content: center;
     margin-left: 20px;
+}
 
+.adminBody{
+    display:flex;
+    width: 100%;
+    height: auto;
+}
+.adminSelect{
+    display:flex;
+    flex-direction: column;
+    margin-top: 40px;
+}
+.adminSelection{
+    border: 1px solid black;
+    font-size: 20px;
+    padding: 10px;
+    text-align: center;
+    width:100px;
+}
+
+table, th, td {
+    border: 1px solid black; 
+}
+.adminUserList{
+    display:none;
+}
+.adminContent{
+    margin-top: 40px;
+    margin-left: 100px;
+}
+
+#uploadstock{
+    display:none;
+}
+.news{
+    display:flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.newscontent{
+    font-size: 20px;
+    border: 1px solid gray;
+    border-radius: 5px;
+    padding: 20px;
+    margin: 10px;
+}
+.productInfo{
+    width:100%;
+    height: auto;
+    display:flex;
+    flex:auto;
+    justify-content: center;
+    align-items: center;
+}
+.product-img{
+    display:flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    width:100%;
+    height: 100%;
+}
+.productS3Img{
+    width: 200px;
+    height: 200px;
+    object-fit:cover;
+    object-position: center;
+    margin:10px;
+}
+.getAgentInfo{
+    margin: 20px;
+    display:flex;
+    width:150px;
+    height: 50px;
+    border: 1px solid orange;
+    background-color: orange;
+    border-radius: 5px;
+    justify-content: center;
+    align-items: center;
+    color:white;
+    font-size: 16px;
+}
+
+.indexProductImg{
+    width: 200px;
+    height: 200px;
+    object-fit:cover;
+    object-position: center;
+    margin:10px;
+}
+.newUploadContainer{
+    width:100%;
+    display:flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+.brand-list{
+    width: 200px;
+    height: 200px;
+    object-fit:cover;
+    object-position: center;
+    margin:10px;
+}
+.advantage-text{
+    font-size: 30px;
+}
+.advantage{
+    width:100%;
+    display:flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+.brandline{
+    display:flex;
+    width:100%;
+    justify-content: center;
+}
+.lookAllBrand{
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 30px;
+    margin-top:10px;
+    margin-bottom: 10px;
+    background-color:orange;
+    width:300px;
+    height: 60px;
+}
+.brandContainer{
+    display:flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    font-size: 20px;
+}
+.brandlistcontent{
+    width:20%;
+    margin:30px;
 }

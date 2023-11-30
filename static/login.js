@@ -158,6 +158,8 @@ function checkstatus(){
         }
         else{
             //已登入時的標籤id是logout
+            let stockupload=document.querySelector('#uploadstock');
+            stockupload.style.display="flex";
             let display_status=document.querySelector("#logout");
             if(display_status){
                 display_status.innerHTML="登出系統";

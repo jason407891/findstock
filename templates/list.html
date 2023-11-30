@@ -19,8 +19,7 @@
     <hr>
     -->
     <div class="ptdata">
-        <span class="productlist_title">自有庫存</span>
-        <img class="product-img" src="../static/wehelp.jpg"></img><br><br>
+        <div class="productlist_title">自有庫存</div>
         <div></div>
         </hr>
     
@@ -81,8 +80,7 @@
 
     <hr>
     <div class="partnerdata">
-        <span class="productlist_title">代理商庫存</span>
-        <img class="product-img" src="../static/wehelp.jpg"></img><br><br>
+        <div class="productlist_title">代理商庫存</div>
         <div>
           <div class="table_area">
             <table class="output_table" border="1">
@@ -104,6 +102,22 @@
         </div>
 
     </div>
+    <hr>
+    <div class="productlist_title">產品資料</div>
+    <div class="productlist_title">產品照片參考:</div>
+    <div class="productInfo">
+      <div class="product-img"></div><br><br>
+    </div>
+    <div class="productlist_title">代理商圖片及連結:<span class="getAgentInfo" onclick="getproductinfo()">取得產品規格連結</span></div>
+
+      <div class="productInfo">
+      <span class="displayImageInfo"></span>
+      <span class="displayProductInfo"></span>
+    </div>
+    <br><br>
+
+
+
     <div class="footer">
       <div>聯絡我們</div>
       <div>TEL: 02-26975001 #2027</div>
@@ -117,6 +131,75 @@
 
 
   <script>
+    function getImageInfo(){
+      return new Promise((resolve, reject)=>{
+      let currentPath = window.location.pathname;
+      fetch("/api/image"+currentPath)
+      .then(response=>response.json())
+      .then(data=>{
+        let imgContainer=document.querySelector(".product-img")
+        imgContainer.innerHTML="";
+        if(data.data.length>0){
+        data.data.forEach(imgurl => {
+          let imgElement = document.createElement('img');
+          let basicUrl="https://findstock.s3.ap-southeast-2.amazonaws.com/"
+          imgElement.src=basicUrl+imgurl;
+          imgElement.className="productS3Img"
+          imgContainer.appendChild(imgElement);
+        });
+      }else{
+        imgContainer.innerHTML=`暫無參考圖片`;
+      }
+      resolve();
+    })
+      .catch(error=>{
+        console.log(error);
+        reject(error);
+      })
+
+    })}
+
+
+      function getproductinfo(){
+        let currentPath = window.location.pathname;
+        fetch("/api/info"+currentPath)
+        .then(response=>response.json())
+        .then(data=>{
+          let productinfo=data.data.data[0];
+          console.log(productinfo);
+          if (productinfo){
+            //處理圖片
+            let imgdisplay=document.querySelector(".displayImageInfo");
+            if(productinfo.image_Link&&productinfo.image_Link!=="null"){
+              let imgElement = document.createElement('img');
+              imgElement.src = productinfo.image_Link;
+              imgdisplay.appendChild(imgElement);
+            }else{
+              imgdisplay.innerHTML="沒有參考圖片";
+            }
+            
+            //處理連結
+            let productlink=document.querySelector(".displayProductInfo");
+            if (productinfo.ProductDetail_Url&&productinfo.ProductDetail_Url!=="undefined"){
+              productlink.innerHTML=`
+              <a href="${productinfo.ProductDetail_Url}" target="_blank">產品規格連結資訊</a>
+              `;
+            }else{
+              productlink.innerHTML="沒有參考連結";
+            }} else {
+              let imgdisplay=document.querySelector(".displayImageInfo");
+              imgdisplay.innerHTML="沒有參考圖片 ";
+              let productlink=document.querySelector(".displayProductInfo");
+              productlink.innerHTML="沒有參考連結";
+            }
+          })
+        .catch(error=>{
+          console.log("something error",error);
+        })
+
+      }
+
+
       function getbreakprice(itemid){
         let demandqty=parseInt(document.querySelectorAll(".demand_qty")[itemid].value);
         let priceBreakData = document.querySelectorAll(".pricebreak_data")[itemid];
@@ -174,13 +257,20 @@
             }) 
         }
   
+
+
+      
       let row_id=0;
       window.addEventListener('load', ()=>{
         
         search().then(()=>{
           agentLoad();
+        }).then(()=>{
+          getImageInfo();
         })
       });
+
+
 
   </script>
 </body>

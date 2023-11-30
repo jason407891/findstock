@@ -75,6 +75,7 @@ function search(){
 }
 
 function agentLoad(){
+    return new Promise((resolve, reject)=>{
     let currentPath = window.location.pathname;
     fetch("/api/agent"+currentPath)
     .then(response=>response.json())
@@ -113,8 +114,13 @@ function agentLoad(){
             row_id+=1;
       });
     })
+            resolve();
     })
-
+    .catch(error=>{
+        console.log(error);
+        reject(error);
+    })
+    })
   }
 
 function showList(){
@@ -145,7 +151,7 @@ function showList(){
         <hr>
         <div class="select">
             <span class="select-btn" onmouseover="style.opacity=0.7" onmouseout="style.opacity=1" onclick="goindex()">首頁</span>
-            <span class="select-btn" onmouseover="style.opacity=0.7" onmouseout="style.opacity=1" onclick="gostock()">庫存上傳</span>
+            <span class="select-btn" id="uploadstock" onmouseover="style.opacity=0.7" onmouseout="style.opacity=1" onclick="gostock()">庫存上傳</span>
             <span class="select-btn" onmouseover="style.opacity=0.7" onmouseout="style.opacity=1" onclick="gobom()">BOM表</span>
             <span class="select-btn" onmouseover="style.opacity=0.7" onmouseout="style.opacity=1" onclick="gorfq()">詢價單</span>
             <span class="select-btn" onmouseover="style.opacity=0.7" onmouseout="style.opacity=1" onclick="gocontact()">聯繫我們</span>
