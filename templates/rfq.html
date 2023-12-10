@@ -8,41 +8,51 @@
 </head>
 <body class="body">
     <div class="bodylist"></div>
-    <hr>
-    <span class="rfq_title">新增詢價料號</span><br><br>
-    <div class="insert_line">
-        <input class="addpn" placeholder="請輸入產品編號"></input>
-        <input class="addmfr" placeholder="請輸入製造商"></input>
-        <input class="addqty" placeholder="請輸入數量"></input>
+    <hr class="hr">
+    <div class="rfqbg">
+        <div class="rfqfunc">
 
-        <button onclick="add_rfq()" class="send_rfq" onmouseover="style.opacity=0.7" onmouseout="style.opacity=1">新增</button><br><br>
+            <span class="rfq_title">新增詢價料號</span><br><br>
+            <div class="insert_line">
+                <input class="addpn" placeholder="請輸入產品編號"></input>
+                <input class="addmfr" placeholder="請輸入製造商"></input>
+                <input class="addqty" placeholder="請輸入數量"></input>
+
+                <button onclick="add_rfq()" class="send_rfq" onmouseover="style.opacity=0.7" onmouseout="style.opacity=1">新增</button><br><br>
+            </div>
+        </div>
     </div>
-        <hr>
-    <span class="rfq_title">詢價清單</span><br><br>
-    <button onclick="deleteALL_rfq()" class="clear_rfq" onmouseover="style.opacity=0.7" onmouseout="style.opacity=1">清空詢價單</button><br><br>
-    <div class="order_area">
-        <table border="1">
-            <thead>
-                <tr>
-                    <th>項次</th>
-                    <th>製造商</th>
-                    <th>產品編號</th>
-                    <th>需求數量</th>
-                    <th>建議價格</th>
-                    <th>修改備註</th>
-                    <th>備註</th>
-                    <th>修改</th>
-                </tr>    
-              </thead>
-              <tbody class="tbody">
-              </tbody>
-        </table>
+    <hr class="hr">
+
+    <div class="rfqbg">
+        <div class="rfqfunc">
+            <span class="rfq_title">詢價清單</span><br><br>
+            <button onclick="deleteALL_rfq()" class="clear_rfq" onmouseover="style.opacity=0.7" onmouseout="style.opacity=1">清空詢價單</button><br><br>
+            <div class="order_area">
+                <table border="1">
+                    <thead>
+                        <tr>
+                            <th>項次</th>
+                            <th>製造商</th>
+                            <th>產品編號</th>
+                            <th>需求數量</th>
+                            <th>建議價格</th>
+                            <th>修改備註</th>
+                            <th>備註</th>
+                            <th>修改</th>
+                        </tr>    
+                    </thead>
+                    <tbody class="tbody">
+                    </tbody>
+                </table>
+                </div>
+                <hr class="hr">
+                <div class="rfq_line">
+                    <span class="rfq_title" >發送詢價單</span><span class="send_rfq"onclick="sendrfq()" onmouseover="style.opacity=0.7" onmouseout="style.opacity=1">送出</span>
+                </div>
         </div>
-        <hr>
-        <div class="rfq_line">
-            <span class="rfq_title" >發送詢價單</span><span class="send_rfq"onclick="sendrfq()" onmouseover="style.opacity=0.7" onmouseout="style.opacity=1">送出</span>
-        </div>
-        <hr>
+    </div>
+        <hr class="hr">
 
         <div class="footer">
             <div>聯絡我們</div>

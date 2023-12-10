@@ -8,67 +8,88 @@
 </head>
 <body class="body">
     <div class="bodylist"></div>
-    <hr>
-    <div class="insert_title">新增庫存</div><br>
-    <div class="insert_line">
-        <input class="insertone_pn"  placeholder="輸入產品編號"></input>
-        <input class="insertone_qty"  placeholder="輸入庫存數量"></input>
-        <input class="insertone_mfr"  placeholder="輸入製造商"></input>
-        <input type="file" class="insertone_profile"></input>
-        <span class="insert_btn" onclick="insert_one()" onmouseover="style.opacity=0.7" onmouseout="style.opacity=1">新增</span>
+    <hr class="hr">
+    <div class="stkbg">
+        <div class="stkfunc">
+            <div class="insert_title">新增庫存</div><br>
+            <div class="insert_line">
+                <input class="insertone_pn"  placeholder="輸入產品編號"></input>
+                <input class="insertone_qty"  placeholder="輸入庫存數量"></input>
+                <input class="insertone_mfr"  placeholder="輸入製造商"></input>
+                <input type="file" class="insertone_profile"></input>
+                <span class="insert_btn" onclick="insert_one()" onmouseover="style.opacity=0.7" onmouseout="style.opacity=1">新增</span>
+            </div>
+        </div>
     </div>
-    <hr>
-    <div class="insert_title">批量新增/更新庫存</div><br>
-    <br>
-    <br>
-    <div class="insert_line">
-        <input type="file" class="insertmany_file" id="input"></br></br>
-        <span class="select_file">提示: 請依照模板格式進行上傳</span>
-        <a class="select_file"href="{{ url_for('static', filename='upload_template.xlsx') }}" download="upload_template1.xlsx">下載模板</a>
-        <span class="insert_btn" onclick="insert_many()" onmouseover="style.opacity=0.7" onmouseout="style.opacity=1">上傳庫存</span>
+    <hr class="hr">
+    <div class="stkbg">
+        <div class="stkfunc">
+            <div class="insert_title">批量新增/更新庫存</div><br>
+            <br>
+            <br>
+            <div class="insert_line">
+                <input type="file" class="insertmany_file" id="input"></br></br>
+                <span class="select_file">提示: 請依照模板格式進行上傳</span>
+                <a class="select_file"href="{{ url_for('static', filename='upload_template.xlsx') }}" download="upload_template1.xlsx">下載模板</a>
+                <span class="insert_btn" onclick="insert_many()" onmouseover="style.opacity=0.7" onmouseout="style.opacity=1">上傳庫存</span>
+            </div>
+        </div>
     </div>
-    <hr>
-    <div class="insert_title">刪除庫存</div><br>
-    <div class="insert_line">
-        <span>請選擇上傳日期</span><input class="delete_date" type="date"></input><br></br>
-        <span class="input_pn">輸入產品編號</span><input class="delete_pn" placeholder="輸入產品編號"></input><br></br>
-        <span class="delete_btn" onclick="deletestock()" onmouseover="style.opacity=0.7" onmouseout="style.opacity=1">刪除</span>
+        
+    <hr class="hr">
+    <div class="stkbg">
+        <div class="stkfunc">
+            <div class="insert_title">刪除庫存</div><br>
+            <div class="insert_line">
+                <span>請選擇上傳日期</span><input class="delete_date" type="date"></input><br></br>
+                <span class="input_pn">輸入產品編號</span><input class="delete_pn" placeholder="輸入產品編號"></input><br></br>
+                <span class="delete_btn" onclick="deletestock()" onmouseover="style.opacity=0.7" onmouseout="style.opacity=1">刪除</span>
+            </div>
+        </div>
     </div>
-    <hr>
-    <div class="insert_title">庫存列表</div>
-    <div class="stock_display">
-    <table border="1">
-        <thead>
-            <tr>
-                <th>供應商</th>
-                <th>上傳時間</th>
-                <th>產品編號</th>
-                <th>庫存數量</th>
-                <th>製造商</th>
-            </tr>    
-          </thead>
-          <tbody class="tbody">
-            <!--
-            <tr>
-              <td>1</td>
-              <td>2</td>
-              <td>3</td>
-              <td>4</td>
-              <td>5</td>
-            </tr>
-            <tr>
-              <td>6</td>
-              <td>7</td>
-              <td>8</td>
-              <td>9</td>
-              <td>10</td>
-            </tr>
-            -->
-            </tbody>
-    </table>
-    </div>
-    <hr>
 
+    <hr class="hr">
+    <div class="stkbg">
+        <div class="stkfunc">
+            <div class="insert_title">庫存列表</div>
+            <div class="stock_display">
+            <table border="1">
+                <thead>
+                    <tr>
+                        <th>供應商</th>
+                        <th>上傳時間</th>
+                        <th>產品編號</th>
+                        <th>庫存數量</th>
+                        <th>製造商</th>
+                    </tr>    
+                </thead>
+                <tbody class="tbody">
+                    <!--
+                    <tr>
+                    <td>1</td>
+                    <td>2</td>
+                    <td>3</td>
+                    <td>4</td>
+                    <td>5</td>
+                    </tr>
+                    <tr>
+                    <td>6</td>
+                    <td>7</td>
+                    <td>8</td>
+                    <td>9</td>
+                    <td>10</td>
+                    </tr>
+                    -->
+                    </tbody>
+            </table>
+            </div>
+            <div class="paginationbg">
+                <div id="pagination-container"></div>
+            </div>
+        </div>
+    </div>
+
+    <hr class="hr">
     <div class="footer">
         <div>聯絡我們</div>
         <div>TEL: 02-26975001 #2027</div>
@@ -188,9 +209,23 @@
             }
 
         }
+        function updatePaginationButtons(currentPage, totalPages) {
+            let paginationContainer = document.getElementById('pagination-container');
+            paginationContainer.innerHTML = ''; // 清空現有的分頁按鈕
+            for(let i = 1; i <= totalPages; i++) {
+                let btn = document.createElement('button');
+                btn.textContent = i;
+                btn.className = 'pagination-button';
+                btn.disabled = i === currentPage; // 禁用當前頁的按鈕
+                btn.addEventListener('click', function() {
+                    showstock(i); // 添加事件處理，按鈕被點擊時顯示該頁數據
+                });
+                paginationContainer.appendChild(btn);
+            }
+        }
 
 
-        function showstock(){
+        function showstock(page,page_size){
             checkLogin();
             fetch("/api/showstock",{
                     method: "POST",
@@ -198,7 +233,9 @@
                     'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                    "supplier": getsupplier()
+                    "supplier": getsupplier(),
+                    "page": page,
+                    "page_size": page_size
                     })
                 })
             .then(response=>response.json())
@@ -234,6 +271,7 @@
                     row.appendChild(stockQtyCell);
                     row.appendChild(manufacturerCell);
                     table.appendChild(row);
+                    updatePaginationButtons(data.page, data.total_pages);
                 });
             })
             .catch(error=>{
@@ -295,7 +333,7 @@
  
 
 
-        window.addEventListener('load', showstock);
+        window.addEventListener('load', showstock(1,10));  /*page-1 page_size=20*/
 
     </script>
 </body>

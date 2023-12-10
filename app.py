@@ -17,6 +17,7 @@ import findchip
 import mouser
 import json
 from operator import itemgetter
+from opensearchpy import OpenSearch
 
 
 aws_access_key_id = "AKIAUFTPQN5O75N6A7EW"
@@ -47,6 +48,60 @@ connection_pool = pooling.MySQLConnectionPool(
     pool_size=5, 
     **dbconfig
 )
+
+#Opensearch Config
+search_host = 'search-jasondomain-ued6ufk4ouzk5seauny6oo76zy.us-east-1.es.amazonaws.com' # 例如: search-my-domain.us-east-1.es.amazonaws.com
+search_port = 443
+auth = ('jason', '12Tina28-')
+
+# 建立連接
+opensearch = OpenSearch(
+    hosts=[{'host': search_host, 'port': search_port}],
+    http_auth=auth,
+    use_ssl=True,
+    verify_certs=True,
+    ssl_assert_hostname=False,
+    ssl_show_warn=False,
+)
+
+def search_partnumber(partnumber):
+    # 定義查詢
+    query = {
+        "query": {
+            "bool": {
+                "should": [
+                    {
+                        "term": {
+                            "pn.keyword": partnumber
+                        }
+                    },
+                    {
+                        "term": {
+                            "noted": partnumber
+                        }
+                    },
+                    {
+                        "wildcard": {
+                            "pn.keyword": "*" + partnumber + "*"
+                        }
+                    }
+                ],
+                "minimum_should_match": 1
+            }
+        }
+    }
+
+    # 執行查詢
+    response = opensearch.search(index="your_index", body=query, size=20)
+
+    # 過濾結果並返回
+    results = []
+    score_threshold=0
+    for doc in response['hits']['hits']:
+        if doc['_score'] >= score_threshold:
+            results.append(doc['_source']['pn'])
+
+    return results
 
 
 @app.route("/")
@@ -103,8 +158,9 @@ def handle_search(partnumber):
 	collection=db['linestock']
 	if request.method == "GET":
 		try:
-			query={"pn":partnumber}
-			results = collection.find(query)
+			pn_array = search_partnumber(partnumber)
+			query = {"pn": {"$in": pn_array}}
+			results = collection.find(query)	
 			data=list(results)
 			# 將所有的 NaN 值轉換成 "NA"
 			for item in data:
@@ -229,14 +285,27 @@ def api_showstock():
 	collection=db['linestock']
 	data=request.get_json()
 	supplier=data["supplier"]
-	query={"supplier":supplier}
-	data=list(collection.find(query).sort("_id",-1).limit(50))
+	page = int(data.get("page", 1))  # 默認為第1頁
+	page_size = int(data.get("page_size", 10))  # 默認每頁10條記錄
+
+	offset = (page - 1) * page_size
+
+	query = {"supplier": supplier}
+	total_items = collection.count_documents(query)
+	data = list(collection.find(query).sort("_id", -1).skip(offset).limit(page_size))
+	#data=list(collection.find(query).sort("_id",-1).limit(50))
 	new_data=[]
 	for item in data:
 		item["_id"]=str(item["_id"])
 		new_data.append(item)
 
-	return jsonify({"data": new_data})
+	return jsonify({
+		"data": new_data,
+        "total_items": total_items,
+        "page": page,
+        "page_size": page_size,
+        "total_pages": (total_items + page_size - 1) // page_size
+		})
 
 @app.route("/api/adminGetUser", methods=["GET"])
 def admin_user():

@@ -8,3 +8,4 @@ pandas
 PyJWT
 openpyxl
 bs4
+opensearch-py

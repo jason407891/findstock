@@ -36,7 +36,7 @@
     </div>
     </div>
     -->
-    <hr>
+    <hr class="hr">
 
     
     <div class="banner-block">
@@ -45,9 +45,9 @@
             <img src="../static/right_arrow.png" class="pic_right_btn" onclick="scroll_right()">
         </div>
         <div class="banner-container">
-            <img src="../static/wehelp.jpg" class="banner-img"></img>
             <img src="../static/index1.png" class="banner-img"></img>
             <img src="../static/index2.png" class="banner-img"></img>
+            <img src="../static/wehelp.jpg" class="banner-img"></img>
         </div>
     </div>
 
@@ -148,12 +148,12 @@
     <script>
         function scroll_right(){
             let pic_display = document.querySelector(".banner-container");
-            let scrollamount = 800;
+            let scrollamount = 1000;
             pic_display.scrollLeft += scrollamount;
         }
         function scroll_left(){
             let pic_display = document.querySelector(".banner-container");
-            let scrollamount = 800;
+            let scrollamount = 1000;
             pic_display.scrollLeft -= scrollamount;
         }
 

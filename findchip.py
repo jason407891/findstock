@@ -21,8 +21,6 @@ def findchips(response,supplier_code,name, profit):
                 #pn
                 pn =row.find(class_="onclick")
                 pn=pn.text.strip()
-                if pn!=name:
-                    break
                 price_result["pn"]=pn
                 #mfr
                 mfr=row.find(class_="td-mfg")
@@ -75,8 +73,6 @@ def findchipsDes(response,supplier_code,name, profit):
                 #pn
                 pn =row.find(class_="onclick")
                 pn=pn.text.strip()
-                if pn!=name:
-                    break
                 price_result["pn"]=pn
                 #mfr
                 mfr=row.find(class_="td-mfg")

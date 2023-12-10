@@ -134,7 +134,7 @@ function showList(){
             <span class="account-content" onclick="sign_in()">登入</span>
             <span class="account-content" onclick="register()">註冊</span>
         </div>
-        <hr>
+        <hr class="hr">
         <a href="/" class="index_title">FINDSTOCK電子元件商城</a>
         </br>
         <div class="search_area">
@@ -148,7 +148,7 @@ function showList(){
         </div>
         </br>    
         </br>
-        <hr>
+        <hr class="hr">
         <div class="select">
             <span class="select-btn" onmouseover="style.opacity=0.7" onmouseout="style.opacity=1" onclick="goindex()">首頁</span>
             <span class="select-btn" id="uploadstock" onmouseover="style.opacity=0.7" onmouseout="style.opacity=1" onclick="gostock()">庫存上傳</span>

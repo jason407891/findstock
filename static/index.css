@@ -10,7 +10,7 @@
 .index_title{
     margin-left: 10px;
     display:flex;
-    font: 30px "Noto Sans TC";
+    font: 36px "Noto Sans TC";
     font-weight: 700;
     color: orangered;
     text-decoration: none;
@@ -39,7 +39,14 @@
 .search-bar{
     width:500px;
     height: 100%;
-    padding:0px;
+}
+.search-bar input {
+    padding: 20px;
+}
+
+.search-bar::placeholder {
+    font-size: 20px;
+    color:#ff8a00;
 }
 .search_btn{
     width: 50px;
@@ -52,7 +59,7 @@
     width: 30px;
 }
 .search_many{
-    display: flex;
+    display: none;
     text-align: center;
     align-items: center;
 }
@@ -81,18 +88,18 @@
 .pic_left_btn{
     z-index:20;
     position: absolute;
-    left: 10px;
+    right: 850px;
 }
 .pic_right_btn{
     z-index:20;
     position: absolute;
-    left: 754px;
+    left: 850px;
 }
 .banner-container{
     display: flex;
     position: absolute;
     overflow: hidden;
-    width: 800px;
+    width: 1000px;
 }
 
 .advantage-text{
@@ -112,7 +119,7 @@
 .select-btn{
     margin-left: 20px;
     margin-right: 20px;
-    font-size:20px;
+    font-size:26px;
 }
 .banner-img{
     min-width: 100% !important;
@@ -283,6 +290,10 @@
 .output_table{
     width: 90%;
     table-layout: fixed;
+    margin-bottom: 20px;
+}
+.hr{
+    margin: 0px;
 }
 
 /*設定第N列的欄位寬*/
@@ -390,15 +401,41 @@
     width:100px;
     height: 50px;
 }
-.ptdata{
+.ptbg{
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #ededed;
+}
+.ptdata{   
+    margin-top: 30px;
     margin-bottom: 30px;
+    background-color: white;
+    width:90%;
 }
 .partnerdata{
+    margin-top: 30px;
     margin-bottom: 30px;
+    background-color: white;
+    width:90%;
+}
+.productdata{
+    margin-top: 30px;
+    margin-bottom: 30px;
+    background-color: white;
+    width:90%;
 }
 
 .productlist_title{
+    font-size: 26px;
+    font-weight: 700;
+    margin-left: 10px;
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+.descrip_title{
     font-size: 20px;
+    font-weight: 700;
     margin-left: 10px;
     margin-top: 30px;
     margin-bottom: 30px;
@@ -509,10 +546,27 @@
     text-align: center;
     width:100px;
 }
-
+table {
+    table-layout: fixed;
+    width: 80%; 
+  }
 table, th, td {
     border: 1px solid black; 
+    border-collapse: collapse;
+    font-size: 20px;
+    margin-bottom: 20px;
 }
+
+table, th {
+    background-color: orange;
+}
+table, td {
+    background-color: white;
+    white-space: normal;
+    overflow-wrap: break-word;
+}
+
+
 .adminUserList{
     display:none;
 }
@@ -627,4 +681,64 @@ table, th, td {
 .brandlistcontent{
     width:20%;
     margin:30px;
+}
+
+.rfqbg{
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #ededed;
+}
+.rfqfunc{   
+    margin-top: 30px;
+    margin-bottom: 30px;
+    background-color: white;
+    width:90%;
+}
+.rfq_title{
+    font-size: 26px;
+    font-weight: 700;
+    margin-left: 10px;
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+.stkfunc{   
+    margin-top: 30px;
+    margin-bottom: 30px;
+    background-color: white;
+    width:90%;
+}
+.stkbg{
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #ededed;
+}
+.insert_title{
+    font-size: 26px;
+    font-weight: 700;
+    margin-left: 10px;
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+.paginationbg{
+    display:flex;
+    justify-content: center;
+    width:100%;
+}
+
+#pagination-container{
+    display:flex;
+    justify-content: center;
+    margin-bottom: 30px;
+    width:400px;
+    flex-wrap: wrap;
+}
+.pagination-button{
+    width:30px;
+    height: 30px;
+    margin:5px;
+    display:flex;
+    justify-content: center;
+    align-items: center;
 }
