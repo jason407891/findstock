@@ -17,15 +17,12 @@ import findchip
 import mouser
 import json
 from operator import itemgetter
-from opensearchpy import OpenSearch
-
 
 aws_access_key_id = "AKIAUFTPQN5O75N6A7EW"
 aws_secret_access_key = "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"
 
 
 client = pymongo.MongoClient("mongodb+srv://root:12root28@cluster0.r39qy0s.mongodb.net/?retryWrites=true&w=majority")
-
 
 app=Flask(__name__)
 app.config["JSON_AS_ASCII"]=False
@@ -48,60 +45,6 @@ connection_pool = pooling.MySQLConnectionPool(
     pool_size=5, 
     **dbconfig
 )
-
-#Opensearch Config
-search_host = 'search-jasondomain-ued6ufk4ouzk5seauny6oo76zy.us-east-1.es.amazonaws.com' # 例如: search-my-domain.us-east-1.es.amazonaws.com
-search_port = 443
-auth = ('jason', '12Tina28-')
-
-# 建立連接
-opensearch = OpenSearch(
-    hosts=[{'host': search_host, 'port': search_port}],
-    http_auth=auth,
-    use_ssl=True,
-    verify_certs=True,
-    ssl_assert_hostname=False,
-    ssl_show_warn=False,
-)
-
-def search_partnumber(partnumber):
-    # 定義查詢
-    query = {
-        "query": {
-            "bool": {
-                "should": [
-                    {
-                        "term": {
-                            "pn.keyword": partnumber
-                        }
-                    },
-                    {
-                        "term": {
-                            "noted": partnumber
-                        }
-                    },
-                    {
-                        "wildcard": {
-                            "pn.keyword": "*" + partnumber + "*"
-                        }
-                    }
-                ],
-                "minimum_should_match": 1
-            }
-        }
-    }
-
-    # 執行查詢
-    response = opensearch.search(index="your_index", body=query, size=20)
-
-    # 過濾結果並返回
-    results = []
-    score_threshold=0
-    for doc in response['hits']['hits']:
-        if doc['_score'] >= score_threshold:
-            results.append(doc['_source']['pn'])
-
-    return results
 
 
 @app.route("/")
@@ -158,8 +101,7 @@ def handle_search(partnumber):
 	collection=db['linestock']
 	if request.method == "GET":
 		try:
-			pn_array = search_partnumber(partnumber)
-			query = {"pn": {"$in": pn_array}}
+			query = {"pn": partnumber}
 			results = collection.find(query)	
 			data=list(results)
 			# 將所有的 NaN 值轉換成 "NA"
@@ -251,11 +193,9 @@ def api_products():
 			if "price" not in insert_stock:
 			    insert_stock["price"] = '[{"goods_price": "請洽業務", "goods_num": "1"}]'
 			insert_data.append(insert_stock)
-
 		if insert_data:
 			collection.insert_many(insert_data)
-		return jsonify({"message": "Products added successfully"})
-
+			return jsonify({"message": "Products added successfully"})
 		'''
 		for insert_stock in data:
 			#處理excel表格裡面的supplier欄位
@@ -555,6 +495,5 @@ def api_allbrand():
 	return jsonify({"data":distinct_brands})
 
 
-	
 
 app.run(host="0.0.0.0", port=3000)
